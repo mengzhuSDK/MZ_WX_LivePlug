@@ -1,8 +1,8 @@
 ﻿
 # 目录说明
 ## 目录结构
+```
 ├─component  历史聊天组件文件夹
-
 ├─components  其他所有组件文件夹
 ├─images 图片
 ├─miniprogram_npm lottie插件
@@ -15,6 +15,7 @@
 │  ├─livepusher  竖屏 - 直播活动推流界面
 │  ├─landpush  横屏 - 直播活动推流界面
 │  └─logs  异常打印页面
+```
 # 接口说明
 
 ## 一、引用
