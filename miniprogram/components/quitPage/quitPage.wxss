@@ -1,0 +1,11 @@
+.back-event {
+	width: 80rpx;
+	height: 80rpx;
+	position: absolute;
+	left: 0rpx;
+}
+
+.back-event .back-image {
+	width: 80rpx;
+	height: 80rpx;
+}

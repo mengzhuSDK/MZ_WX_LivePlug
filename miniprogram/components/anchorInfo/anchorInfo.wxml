@@ -1,0 +1,25 @@
+<view class="anchor-info" style="top:{{menuButton.top-4+'px'}}">
+    <!-- 主播头像 -->
+    <view class="anchor-info-icon">
+        <image class="anchor-image" 
+            mode="aspectFill"  
+            src="{{anchorInfo.anchorPic}}"></image>
+    </view>
+
+    <!-- 主播昵称 -->
+    <view class="anchor-info-name">
+        {{anchorInfo.anchorName}}
+    </view>
+
+    <!-- 主播人气值 -->
+    <view class="anchor-info-popularity">
+    <text style="color:{{anchorInfo.anchorTicketState =='直播'?'#FF1F60':'gray'}}">•</text><text>{{anchorInfo.anchorTicketState}}{{" | "}}人气{{anchorInfo.anchorPopularityNum}}</text>
+    </view>
+
+    <!-- 关注按钮 -->
+    <view class="anchor-info-follow">
+        <view class="anchor-info-followbtn" bindtap="followAnchor">
+            关注
+        </view>
+    </view>
+</view>

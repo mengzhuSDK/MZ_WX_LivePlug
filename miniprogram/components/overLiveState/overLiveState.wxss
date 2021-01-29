@@ -1,0 +1,165 @@
+.container-over-end{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	/* background-color: rgba(255, 255, 255, 1); */
+	top: 0;
+	bottom: 0;
+	left: 0;
+}
+.container-leave {
+	width: 42.67vw;
+	height: 14.93vw;
+	position: absolute;
+	top: 60vw;
+	text-align: center;
+	font-size: 5.33vw;
+	color: rgba(255, 255, 255, 1);
+}
+.container-leave {
+	width: 100%;
+	height: 14.93vw;
+	position: absolute;
+	top: 60vw;
+	text-align: center;
+	font-size: 5.33vw;
+	color: rgba(255, 255, 255, 1);
+}
+.container-leave-text{
+	text-align: center;
+}
+.live-player {
+	width: 100vw;
+	height: 100vh;
+}
+
+.live-show {
+	display: block;
+}
+
+.live-hide {
+	display: none;
+}
+.container-end {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}
+
+.container-end .end-title {
+	width: 100vw;
+	font-size: 24px;
+	font-weight: 600;
+	color: rgba(255, 255, 255, 1);
+	text-align: center;
+	position: absolute;
+	top: 30vw
+}
+
+.container-end .end-card {
+	width: 84vw;
+	height: 57vw;
+	background: rgba(29, 27, 34, 0.4);
+	border-radius: 16px;
+	position: absolute;
+	left: 8vw;
+	top: 60vw
+}
+
+.end-card-title {
+	width: 24vw;
+	height: 24vw;
+	border-radius: 50%;
+	overflow: hidden;
+	position: absolute;
+	left: 38vw;
+	top: 48vw
+}
+
+.end-card-title .end-header {
+	width: 24vw;
+    height: 24vw;
+    border-radius: 50%;
+}
+
+.container-end .end-card .end-name {
+	width: 84vw;
+	/* height:28px; */
+	font-size: 20px;
+	font-weight: 600;
+	color: rgba(255, 255, 255, 1);
+	text-align: center;
+	position: absolute;
+	top: 15vw
+}
+
+.container-end .end-card .end-id {
+	width: 84vw;
+	/* height:28px; */
+	font-size: 13px;
+	/* font-weight:600; */
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+	position: absolute;
+	top: 24vw
+}
+
+.container-end .end-card .end-time {
+	width: 28vw;
+	/* height:28px; */
+	font-size: 13px;
+	/* font-weight:600; */
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+	position: absolute;
+	top: 28vw;
+	left: 0;
+	line-height: 10.67vw
+}
+
+.container-end .end-card .end-number {
+	width: 28vw;
+	/* height:28px; */
+	font-size: 13px;
+	/* font-weight:600; */
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+	position: absolute;
+	top: 28vw;
+	right: 0;
+	line-height: 10.67vw
+}
+
+.container-end .end-back {
+	width: 84vw;
+	height: 10vw;
+	background:#FF2164;
+	border-radius: 5vw;
+	position: absolute;
+	left: 8vw;
+	top: 130vw;
+	font-size: 16px;
+	/* font-weight:600; */
+	color: rgba(255, 255, 255, 1);
+	text-align: center;
+	line-height: 10vw
+}
+
+.end-up {
+	font-weight: 400;
+	color: rgba(255, 255, 255, 1);
+	font-size: 18px;
+}
+
+.container-over-end-background-pic{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(29, 27, 34, 1);
+    background-size: 100%;
+}

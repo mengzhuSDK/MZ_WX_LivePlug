@@ -1,0 +1,13 @@
+<view wx:if="{{goodsListDataReverse.length>0||goodsItemPush.length>0}}" class="goods-list" data-url="{{defaultInfo.buy_url}}" bind:tap="toBuyGoods" animation="{{loopAnimationStart}}">
+        <image class="goods-image" mode="aspectFill" src="{{defaultInfo.goodsItemPic}}?size=200x200"></image>
+        <view class="goods-name">{{defaultInfo.goodsItemName}}</view>
+        <view class="goods-price">
+            {{defaultInfo.goodsItemCurrency}}{{defaultInfo.goodsItemPrice}}
+        </view>
+    </view>
+<view class="goods-info" hidden="{{hiddenIcon}}">
+    <image class="goodsbox-image" mode="aspectFill" src="/images/ic_shopping.png" bind:tap="showPopup"></image>
+    <view class="goodsbox-image" bind:tap="showPopup">
+        {{defaultInfo.allGoodsNum}}
+    </view>
+</view>

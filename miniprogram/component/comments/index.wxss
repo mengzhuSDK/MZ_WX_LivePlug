@@ -1,0 +1,63 @@
+.comment-info {
+	width: 90.4vw;
+	top: 70vh;
+	position: absolute;
+	left: 3.2vw;
+	bottom: 39.1vw;
+	overflow: scroll;
+}
+
+.comment-item {
+	width: 100%;
+	position: relative;
+}
+
+.comment-item .comment-item-icon {
+	width: 4.53vw;
+	height: 4.53vw;
+	border-radius: 50%;
+	overflow: hidden;
+	position: absolute;
+	top: 1vw;
+}
+
+.comment-item .comment-item-icon .comment-image {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+.comment-item .comment-item-info {
+	line-height: 6.93vw;
+	position: relative;
+	font-size: 3.47vw;
+	color: rgba(255, 255, 255, 1);
+	white-space: normal;
+	display: flex;
+	padding-left: 5.5vw;
+}
+
+.comment-item .comment-item-info .comment-item-username {
+	color: rgba(0, 145, 255, 1);
+	display: inline-block;
+	flex-flow: row nowrap;
+	white-space: nowrap;
+}
+
+.comment-item .comment-item-info .comment-item-contact {
+	color: rgba(255, 255, 255, 1);
+	display: inline-block;
+	flex-flow: row nowrap;
+	white-space: normal;
+	word-break: break-all;
+}
+.vio-tips {
+	padding: 2.13vw;
+    background:rgba(255,33,69,.39);
+	border-radius:1.07vw;
+	width: 51.2vw;
+    font-size:3.47vw;
+    font-weight:400;
+	color:rgba(255,255,255,1);
+	line-height:4.8vw;
+}

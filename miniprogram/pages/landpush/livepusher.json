@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "quit-page": "../../components/quitPage/quitPage",
+    "user-head-icon": "../../components/userHeadIcon/userHeadIcon"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll":true,
+  "pageOrientation":"landscape"
+}

@@ -1,0 +1,7 @@
+<view class="back-event" 
+    style="top:{{menuButton.top+'px'}}" 
+    bindtap="showQuitModel">
+    <image class="back-image"
+        mode="aspectFill"
+        src="/images/nav_back_white.png"></image>
+</view>

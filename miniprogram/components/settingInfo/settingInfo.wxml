@@ -1,0 +1,17 @@
+<view class="setting-info" hidden="{{hiddenSelf}}">
+    <like-fx wx:if="{{true}}" count="{{count}}"></like-fx>
+    <view class="setting-image set-image">
+        <image class="set-image-inner" hidden="{{settingPopupState}}" mode="aspectFill" src="/images/vx_setting_default.png" bindtap="openSettingPopup"></image>
+    </view>
+    <view class="setting-image share-image">
+        <image class="set-image-inner" mode="aspectFill" src="/images/vx_share.png" bindtap="shareInfo"></image>
+    </view>
+    <view class="setting-image like-image">
+        <image class="set-image-inner" mode="aspectFill" src="/images/vx_like.png" bindtap="likeShowHeart"></image>
+    </view>
+</view>
+<!-- 设置按钮弹层（隐式弹层） -->
+<view hidden="{{!settingPopupState}}" class="setting-panel" bindtap="closeSettingPopup">
+    <image class="report-image" mode="aspectFill" src="/images/vx_report.png" bindtap="reportInfo"></image>
+    <image class="close-image" mode="aspectFill" src="/images/vx_setting_close.png"></image>
+</view>

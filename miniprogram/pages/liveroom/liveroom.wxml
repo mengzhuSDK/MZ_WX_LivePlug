@@ -1,0 +1,204 @@
+<view class="container">
+    <!-- 视频播放-回放 -->
+    <video wx:if="{{ticketStatus == 2 || ticketStatus == 0}}" 
+        class="{{!liveShow?'live-player live-show':'live-player live-hide'}}" 
+        id="myVideo"
+        src="{{videoUrl}}" 
+        autoplay
+        controls="{{true}}"
+        loop="loop"
+        danmu-btn="{{live_type == 0? true:false}}"
+        enable-danmu="{{true}}"
+        show-casting-button="{{live_style==0?(live_type == 0? true: false):false}}"
+        object-fit="{{live_style==0?'fit':'fit'}}"
+        show-fullscreen-btn="{{live_style==0?(live_type == 0? true: false):false}}"
+        bindfullscreenchange="enterFull"
+        bindcontrolstoggle="controlIsShow"
+        bindplay="bindplay"
+        bindpause="bindpause"
+        show-progress="{{live_style==0?true:controlIsHidden}}"
+        style="width:100vw;height:{{live_style==0?'56.00vw':'97vh'}};margin-top:{{playerViewTop}}">
+
+        <cover-view class="recordScreenClass"
+            style="margin-left:{{recordScreen.marginLeft}}px;margin-top:{{recordScreen.marginTop}}px;color:{{recordScreen.textColor}}"
+            hidden="{{recordScreen.isHidden}}">
+            {{recordScreen.text}}
+        </cover-view>
+        <image class="coverClass" src="{{cover}}" hidden="{{coverIsHidden}}" mode="{{live_style==0?'aspectFill':'aspectFit'}}" style="width:100%;height:100%"></image>
+    </video>
+    <!-- orientation="{{live_style==0?'vertical':'horizontal'}}"  -->
+    <live-player wx:if="{{ticketStatus == 1 || ticketStatus == 3}}" id="livePlayer" class="{{!liveShow?'live-player live-show':'live-player live-hide'}}" 
+        src="{{videoUrl}}" 
+        mode="live" 
+        autoplay 
+        bindstatechange="statechange" 
+        binderror="error" 
+        sound-mode="speaker" 
+        object-fit="{{live_style==0?'contain':'contain'}}"
+        bindfullscreenchange="enterFull"
+        style="width:100vw;height:{{live_style==0?'56.00vw':'100vh'}};margin-top:{{playerViewTop}}">
+
+        <cover-view class="recordScreenClass"
+            style="margin-left:{{recordScreen.marginLeft}}px;margin-top:{{recordScreen.marginTop}}px;color:{{recordScreen.textColor}}"
+            hidden="{{recordScreen.isHidden}}">
+            {{recordScreen.text}}
+        </cover-view>
+        <image class="coverClass" src="{{cover}}" hidden="{{coverIsHidden}}" mode="{{live_style==0?'aspectFill':'aspectFit'}}" style="width:100%;height:100%"></image>
+    </live-player>
+
+    <canvas type="2d" id="canvas" class="canvas" hidden="{{auaniIsHidden}}"></canvas>
+
+    <view wx:if="{{live_style==0}}" class="menu">
+        <view class="chat" style="color:{{menuChatColor}}" bindtap="menuChatClick">互动</view>
+        <!-- 放开下面就添加了2个菜单，然后wxss里面的clumn-count再变成3-->
+        <!-- <view class="document" style="color:{{menuDocumentColor}}" bindtap="menuDocumentClick">文档</view>
+        <view class="discuss" style="color:{{menuDiscussColor}}" bindtap="menuDiscussClick">问答</view> -->
+    </view>
+
+    <over-live-state
+        overLiveState = "{{overLiveState}}"
+        liveState = "{{liveState}}"
+        defaultText = "{{defaultText}}"
+        defaultInfo = "{{defaultInfo}}"
+        duration = "{{duration}}"
+        uv = "{{uv}}"
+    ></over-live-state>
+    <!-- <view class="container-top">
+    </view>
+    <view class="container-under">
+    </view> -->
+
+
+
+    <!-- 退回主页按钮 -->
+    <quit-page
+        menuButton="{{menuButton}}"
+        bindtap="ComponentsQuitPageTap"
+    ></quit-page>
+
+    <!-- 主播信息展示区域 -->
+    <anchor-info
+        followText="{{defaultText}}"
+        menuButton="{{menuButton}}"
+        anchorInfo="{{defaultInfo}}"
+    ></anchor-info>
+
+    <!-- 新人头像 -->
+    <user-head-icon
+        menuButton="{{menuButton}}"
+        iconList="{{iconList}}"
+    ></user-head-icon>
+
+    <!-- 商品列表动画弹层 -->
+    <goods-info
+        hiddenIcon="{{live_style==0?false:controlIsHidden}}"
+        bind:ShowPopup="ComponentsShowPopup"
+        goodsListDataReverse="{{goodsListDataReverse}}"
+        goodsItemPush="{{goodsItemPush}}"
+        defaultInfo="{{defaultInfo}}"
+        loopAnimationStart="{{loopAnimationStart}}"
+    ></goods-info>
+    
+    <view class="user-online"
+        animation="{{userOnlineAnimation}}"
+        style="bottom:{{goodsListDataReverse.length>0||goodsItemPush.length>0?'81.46vw':'66.46vw'}};left:{{userOnlineDefaule.left}};opacity:{{userOnlineDefaule.opacity}}">
+        <image class="user-online-pic" src="/images/ic_living.png"></image>
+        <view class="user-online-info">
+            <view class="user-online-info-text">
+                来了
+            </view>
+            <view class="user-online-info-name">
+                {{userOnlineName}}
+            </view>
+
+        </view>
+    </view>
+    <!-- 历史信息展示组件 -->
+    <import src="../../component/comments/index.wxml"></import>
+    <template is="comments" data="{{commentList, scrollTop,             bottomValue:goodsListDataReverse.length>0||goodsItemPush.length>0?'39.1vw':'19.2vw',   topValue:live_style==1?'70vh':playerViewTop=='182rpx'?'calc(69.7vw + 182rpx)':'calc(69.7vw + 142rpx)'}}"></template>
+
+    <!-- 设置按钮组件 -->
+    <setting-info
+        count = "{{count}}"
+        pageInfo = "{{pageInfo}}"
+        hiddenSelf = "{{live_style==0?false:controlIsHidden}}"
+        defaultInfo = "{{defaultInfo}}"
+        chatUid = "{{chatUid}}"
+    ></setting-info>
+
+    <!-- 聊天输入框 -->
+    <input style="bottom:{{inputHeight}}"
+        class="text-input" wx-if="{{inputShow}}" 
+        focus="{{true}}" 
+        type="text" 
+        placeholder="{{defaultText.placeholderText}}" 
+        placeholder-class="input-placeholder" 
+        confirm-type="send" 
+        bindconfirm="userAddComment" 
+        value='{{test}}' 
+        adjust-position="{{false}}" 
+        cursor-spacing="{{0}}" 
+        bindfocus="userAddCommentfocus" 
+        bindblur="userAddCommentblur" 
+    />
+
+    <!-- 商品列表展示组件 -->
+    <goods-info-popup
+        defaultInfo="{{defaultInfo}}"
+        chooseSize="{{chooseSize}}"
+        defaultText="{{defaultText}}"
+        goodsListDataReverse="{{goodsListDataReverse}}"
+    ></goods-info-popup>
+
+    <view hidden="{{live_style==0?false:controlIsHidden}}" class="{{classNameKeyboardUp}}" style="bottom:{{inputHeight}}">
+      <input type="text"
+        placeholder="{{!disablechat?defaultText.placeholderText:'您已被禁言'}}"
+        placeholder-class="input-placeholder"
+        confirm-type="send"
+        bindconfirm="userAddComment"
+        value='{{test}}'
+        adjust-position="{{false}}"
+        cursor-spacing="{{0}}"
+        bindfocus="userAddCommentfocus"
+        bindblur="userAddCommentblur"
+      />
+    </view>
+
+    <cover-view wx:if="{{disablechat}}" hidden="{{live_style==0?false:controlIsHidden}}" class="classNameKeyboardCover">
+        <!-- 您已被禁言 -->
+    </cover-view>
+
+    <cover-view wx:if="{{visitorType}}" hidden="{{live_style==0?false:controlIsHidden}}" class="classNameKeyboardCover" bind:tap="toLogin">
+        <!-- 您是访客 -->
+    </cover-view>
+
+    <!-- 退出页面弹出窗 -->
+    <quit-page-popup
+        showQuitModelState="{{showQuitModelState}}"
+        defaultInfo="{{defaultInfo}}"
+        defaultText="{{defaultText}}"
+        bind:closeQuitModel="_closeQuitModel"  
+    ></quit-page-popup>
+
+    <end-live-state
+        overLiveState = "{{overLiveState}}"
+        liveState = "{{liveState}}"
+        defaultText = "{{defaultText}}"
+        defaultInfo = "{{defaultInfo}}"
+        duration = "{{duration}}"
+        uv = "{{uv}}"
+    ></end-live-state>
+
+    <view wx:if="{{live_style==0}}" 
+        class="documentClass" 
+        style="top:{{playerViewTop=='182rpx'?'calc(69.7vw + 182rpx)':'calc(69.7vw + 142rpx)'}}" hidden="{{menuShowIndex == 1?false:true}}">
+        aasdadasdasd
+    </view>
+
+    <view wx:if="{{live_style==0}}" 
+        class="discussClass" 
+        style="top:{{playerViewTop=='182rpx'?'calc(69.7vw + 182rpx)':'calc(69.7vw + 142rpx)'}}" hidden="{{menuShowIndex == 2?false:true}}">
+        asasda
+    </view>
+
+</view>

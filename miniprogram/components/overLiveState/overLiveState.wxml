@@ -1,0 +1,7 @@
+<view class="container-over-end" wx:if="{{ liveState == 3}}" >
+    <view style="background-inage:url('{{defaultInfo.anchorPic}}')" class="container-over-end-background-pic" ></view>
+    <view class="{{liveShow?'container-leave live-show':'container-leave live-hide'}}">
+        <view class="container-leave-text">{{defaultText.leaveInfoOne}}</view>
+        <view class="container-leave-text">{{defaultText.leaveInfoTwo}}</view>
+    </view>
+</view>

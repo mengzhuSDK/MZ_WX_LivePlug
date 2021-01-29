@@ -1,0 +1,365 @@
+<view class="container">
+	<live-pusher
+	 class="lfPusherView"
+	 url="{{src}}"
+	 autopush="true"
+	 mode="{{settingCheck.def}}"
+	 muted="{{settingCheck.mute}}"
+	 beauty="{{settingCheck.beauty}}"
+	 whiteness="{{settingCheck.whiteness}}"
+	 remote-mirror="{{settingCheck.image}}"
+	 local-mirror="{{settingCheck.image}}"
+	 device-position="{{!check.back_camera?'front':'back'}}"
+	 orientation="{{live_style == '1' ? 'vertical' : 'horizontal'}}"
+	 enable-camera="{{!(live_type == '1')}}"
+	 bindstatechange="pushStatechange"
+	 bindnetstatus="pushNetStatus"
+	/>
+
+	<canvas
+	 type="2d"
+	 id="canvas"
+	 class="canvas"
+	 hidden="{{auaniIsHidden}}"
+	></canvas>
+	<!-- 退回主页按钮 -->
+	<quit-page menuButton="{{menuButton}}" bindtap="ComponentsQuitPageTap"></quit-page>
+	<view class="anchor-info" style="top:{{menuButton.top+'px'}}">
+		<!-- 主播头像 -->
+		<view class="anchor-info-icon">
+			<image
+			 class="anchor-image"
+			 mode="aspectFill"
+			 src="{{anchorInfo.anchorPic}}"
+			></image>
+		</view>
+
+		<!-- 主播昵称 -->
+		<view class="anchor-info-name">
+			{{anchorInfo.anchorName}}
+		</view>
+
+		<!-- 主播人气值 -->
+		<view class="anchor-info-popularity">
+			{{defaultText.anchorPopularity}}{{anchorInfo.anchorPopularityNum}}
+		</view>
+
+	</view>
+
+	<view class="pushinfo">
+		<view class="bitrate">{{bitrate}}kb/s</view>
+		<view class="time">{{push_time_format}}</view>
+	</view>
+
+	<!-- 新人头像 -->
+	<user-head-icon menuButton="{{menuButton}}" iconList="{{iconList}}"></user-head-icon>
+
+	<!-- 历史信息展示组件 -->
+	<import src="../../component/comments/index.wxml"></import>
+	<template is="comments" data="{{commentList, scrollTop, bottomValue:'19.2vw',   topValue:live_style==1?'70vh':playerViewTop=='182rpx'?'calc(69.7vw + 182rpx)':'calc(69.7vw + 142rpx)'}}"></template>
+</view>
+
+<view class="bottom">
+	<view hidden="{{live_style == 0}}" class="bottom-menu">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.setting?'../../images/vx_setting_close.png':'../../images/vx_setting_default.png'}}"
+		 mode="aspectFill"
+		 data-type='setting'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_type == '1'}}">
+		<image
+		 class="set_image_inner"
+		 src="../../images/push_camera.png"
+		 mode="aspectFill"
+		 data-type='camera'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu">
+		<image
+		 class="set_image_inner"
+		 src="../../images/vx_share.png"
+		 mode="aspectFill"
+		 data-type='share'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.beauty > 0?'../../images/vx_setting_beauty_check.png':'../../images/vx_setting_beautfy.png'}}"
+		 mode="aspectFill"
+		 data-type='beauty'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.image?'../../images/vx_setting_image_check.png':'../../images/vx_setting_image.png'}}"
+		 mode="aspectFill"
+		 data-type='image'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.flash?'../../images/vx_setting_flash_check.png':'../../images/vx_setting_flash.png'}}"
+		 mode="aspectFill"
+		 data-type='flash'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.mute?'../../images/vx_setting_mute_check.png':'../../images/vx_setting_mute.png'}}"
+		 mode="aspectFill"
+		 data-type='mute'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.chat?'../../images/vx_setting_chat_check.png':'../../images/vx_setting_chat.png'}}"
+		 mode="aspectFill"
+		 data-type='chat'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu" hidden="{{live_style == 1}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.defImage}}"
+		 mode="aspectFill"
+		 data-type='def'
+		 bindtap="settingClick"
+		></image>
+	</view>
+</view>
+
+<view
+ hidden="{{viewMode==0?false:controlIsHidden}}"
+ class="{{classNameKeyboardUp}}"
+ style="bottom:{{inputHeight}}"
+>
+	<input
+	 type="text"
+	 placeholder="{{defaultText.placeholderText}}"
+	 placeholder-class="input-placeholder"
+	 confirm-type="send"
+	 bindconfirm="userAddComment"
+	 value='{{test}}'
+	 adjust-position="{{false}}"
+	 cursor-spacing="{{0}}"
+	 bindfocus="userAddCommentfocus"
+	 bindblur="userAddCommentblur"
+	/>
+</view>
+
+<view
+ class="user-online"
+ animation="{{userOnlineAnimation}}"
+ style="bottom:{{'55.46vw'}};left:{{userOnlineDefaule.left}};opacity:{{userOnlineDefaule.opacity}}"
+>
+	<image class="user-online-pic" src="/images/ic_living.png"></image>
+	<view class="user-online-info">
+		<view class="user-online-info-text">
+			来了
+		</view>
+		<view class="user-online-info-name">
+			{{userOnlineName}}
+		</view>
+
+	</view>
+</view>
+
+<view class="bottom-pop" hidden="{{!settingCheck.setting}}">
+
+	<view class="bottom-menu-pop" hidden="{{live_type == '1'}}">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.beauty>0?'../../images/vx_setting_beauty_check.png':'../../images/vx_setting_beautfy.png'}}"
+		 mode="aspectFill"
+		 data-type='beauty'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu-pop">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.image?'../../images/vx_setting_image_check.png':'../../images/vx_setting_image.png'}}"
+		 mode="aspectFill"
+		 data-type='image'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu-pop">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.flash?'../../images/vx_setting_flash_check.png':'../../images/vx_setting_flash.png'}}"
+		 mode="aspectFill"
+		 data-type='flash'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu-pop">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.mute?'../../images/vx_setting_mute_check.png':'../../images/vx_setting_mute.png'}}"
+		 mode="aspectFill"
+		 data-type='mute'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu-pop">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.chat?'../../images/vx_setting_chat_check.png':'../../images/vx_setting_chat.png'}}"
+		 mode="aspectFill"
+		 data-type='chat'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view class="bottom-menu-pop">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.defImage}}"
+		 mode="aspectFill"
+		 data-type='def'
+		 bindtap="settingClick"
+		></image>
+	</view>
+
+	<view
+	 class="defpop"
+	 style="bottom: {{live_type == '1'? '62.92vw':'77.85vw'}};"
+	 hidden="{{!settingCheck.defClick || live_style ==0}}"
+	>
+		<view hidden="{{live_style == 0}}" class="defpop-item">
+			<image
+			 class="set_image_inner"
+			 src="{{settingCheck.def == 'SD'?'../../images/icon_sd_check.png':'../../images/icon_sd.png'}}"
+			 mode="aspectFill"
+			 data-type='SD'
+			 bindtap="settingClick"
+			></image>
+		</view>
+		<view hidden="{{live_style == 0}}" class="defpop-item">
+			<image
+			 class="set_image_inner"
+			 src="{{settingCheck.def == 'HD'?'../../images/icon_hd_check.png':'../../images/icon_hd.png'}}"
+			 mode="aspectFill"
+			 data-type='HD'
+			 bindtap="settingClick"
+			></image>
+		</view>
+		<view hidden="{{live_style == 0}}" class="defpop-item">
+			<image
+			 class="set_image_inner"
+			 src="{{settingCheck.def == 'FHD'?'../../images/icon_fhd_check.png':'../../images/icon_fhd.png'}}"
+			 mode="aspectFill"
+			 data-type='FHD'
+			 bindtap="settingClick"
+			></image>
+		</view>
+	</view>
+
+</view>
+
+<view class="defpopl" hidden="{{!settingCheck.defClick || live_style ==1}}">
+	<view hidden="{{live_style == 1}}" class="defpopl-item">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.def == 'SD'?'../../images/icon_sd_check.png':'../../images/icon_sd.png'}}"
+		 mode="aspectFill"
+		 data-type='SD'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view hidden="{{live_style == 1}}" class="defpopl-item">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.def == 'HD'?'../../images/icon_hd_check.png':'../../images/icon_hd.png'}}"
+		 mode="aspectFill"
+		 data-type='HD'
+		 bindtap="settingClick"
+		></image>
+	</view>
+	<view hidden="{{live_style == 1}}" class="defpopl-item">
+		<image
+		 class="set_image_inner"
+		 src="{{settingCheck.def == 'FHD'?'../../images/icon_fhd_check.png':'../../images/icon_fhd.png'}}"
+		 mode="aspectFill"
+		 data-type='FHD'
+		 bindtap="settingClick"
+		></image>
+	</view>
+</view>
+
+<view class="beautypop" hidden="{{!settingCheck.beautyClick || live_style ==0}}">
+	<view
+	 hidden="{{live_style == 0}}"
+	 class="beautypop-item"
+	 data-type='0'
+	 bindtap="settingClick"
+	>
+		<view class="set_text_inner" style="color:{{settingCheck.beauty == 0?'#FF2145':'#FFFFFF'}}">无</view>
+	</view>
+	<view
+	 hidden="{{live_style == 0}}"
+	 class="beautypop-item"
+	 data-type='2'
+	 bindtap="settingClick"
+	>
+		<view class="set_text_inner" style="color:{{settingCheck.beauty == 2?'#FF2145':'#FFFFFF'}}">1x</view>
+	</view>
+	<view
+	 hidden="{{live_style == 0}}"
+	 class="beautypop-item"
+	 data-type='4'
+	 bindtap="settingClick"
+	>
+		<view class="set_text_inner" style="color:{{settingCheck.beauty == 4?'#FF2145':'#FFFFFF'}}">2x</view>
+	</view>
+	<view
+	 hidden="{{live_style == 0}}"
+	 class="beautypop-item"
+	 data-type='6'
+	 bindtap="settingClick"
+	>
+		<view class="set_text_inner" style="color:{{settingCheck.beauty == 6?'#FF2145':'#FFFFFF'}}">3x</view>
+	</view>
+	<view
+	 hidden="{{live_style == 0}}"
+	 class="beautypop-item"
+	 data-type='9'
+	 bindtap="settingClick"
+	>
+		<view class="set_text_inner" style="color:{{settingCheck.beauty == 9?'#FF2145':'#FFFFFF'}}">4x</view>
+	</view>
+</view>
+
+	<!-- 聊天输入框 -->
+	<input
+	 style="bottom:{{inputHeight}}"
+	 class="text-input"
+	 wx-if="{{inputShow}}"
+	 focus="{{true}}"
+	 type="text"
+	 placeholder="{{defaultText.placeholderText}}"
+	 placeholder-class="input-placeholder"
+	 confirm-type="send"
+	 bindconfirm="userAddComment"
+	 value='{{test}}'
+	 adjust-position="{{false}}"
+	 cursor-spacing="{{0}}"
+	 bindfocus="userAddCommentfocus"
+	 bindblur="userAddCommentblur"
+	/>
+

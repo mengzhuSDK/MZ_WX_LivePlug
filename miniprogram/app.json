@@ -1,0 +1,32 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/liveroom/liveroom",
+    "pages/livepusher/livepusher",
+    "pages/landpush/livepusher",
+    "pages/logs/logs",
+    "pages/livecheckpermission/livecheckpermission",
+    "pages/createactivity/createactivity"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom",
+    "renderingMode": "mixed"
+  },
+  "useExtendedLib": {
+    "weui": true
+  },
+  "sitemapLocation": "sitemap.json",
+  "enablePullDownRefresh": false,
+  "disableScroll": true,
+  "plugins": {
+    "mz-plugin": {
+      "version": "2.0.0",
+      "provider": "wx2d4303f54f4d98ab"
+    }
+  }
+}
+

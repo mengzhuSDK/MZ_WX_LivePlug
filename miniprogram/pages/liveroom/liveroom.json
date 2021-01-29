@@ -1,0 +1,16 @@
+{
+  "usingComponents": {
+    "like-fx": "../../components/likeFx/likeFx",
+    "anchor-info": "../../components/anchorInfo/anchorInfo",
+    "quit-page": "../../components/quitPage/quitPage",
+    "setting-info": "../../components/settingInfo/settingInfo",
+    "goods-info": "../../components/goodsInfo/goodsInfo",
+    "goods-info-popup": "../../components/goodsInfoPopup/goodsInfoPopup",
+    "user-head-icon": "../../components/userHeadIcon/userHeadIcon",
+    "quit-page-popup": "../../components/quitPagePopup/quitPagePopup",
+    "over-live-state": "../../components/overLiveState/overLiveState",
+    "end-live-state": "../../components/endLiveState/endLiveState"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll":true
+}
