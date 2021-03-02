@@ -1,7 +1,7 @@
 <!--pages/index/index.wxml-->
 <view class="test-page">
     <view>请输入直播id号（ticketId）：</view>
-    <input type="text" placeholder="默认为: 10181510" class="test-inp" bindinput="ticketId" />
+    <input type="text" placeholder="默认为: 10181778" class="test-inp" bindinput="ticketId" />
     <view>请输入用户id（uniqueId）：</view>
     <input type="text" placeholder="为空则默认为: mengzhuyouke" class="test-inp" bindinput="uniqueId" />
     <view>请输入用户昵称（nickName）：</view>

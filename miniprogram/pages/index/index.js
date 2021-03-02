@@ -7,7 +7,7 @@ Page({
   data: {
 
     ticketId: "",
-    ticketIdDefault: "10181510",
+    ticketIdDefault: "10181778",
     userInfo: {
       avatarUrl: '',
       nickName: '',
@@ -15,8 +15,8 @@ Page({
       phone: ''
     },
 
-    appId: "",
-    secret: "",
+    appId: "2020121810103437745",
+    secret: "x6Kfsjsx89f1fcumHUVsd0u7u1z4EDjdx9d2jWsh9bB8EH70i9IYfeA79WV7WHH1",
     channelId: '',
   },
 
