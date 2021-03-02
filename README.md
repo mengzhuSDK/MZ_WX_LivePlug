@@ -1,4 +1,4 @@
-﻿
+
 # 目录说明
 ## 目录结构
 ```
@@ -64,9 +64,9 @@ createNewLive|[Object]|```{liveCover:"活动封面"，liveName:"活动名字"，
 getCategoryList|[]|```{}```|获取分组列表，创建活动时需要，非必须
 getFCodeList|[]|```{}```|获取F码列表，创建活动时需要，非必须
 getWhiteList|[]|```{}```|获取白名单列表，创建活动时需要，非必须
-startLive|[Object]```{ticketId:"活动编号"，live_tk:"活动凭证"，uniqueId:"用户唯一ID"，name:"用户名字"，avatar:"用户头像"}```|获取推流地址，开始直播
+startLive|[Object]|```{ticketId:"活动编号"，live_tk:"活动凭证"，uniqueId:"用户唯一ID"，name:"用户名字"，avatar:"用户头像"}```|获取推流地址，开始直播
 stopLive|[Object]|```{channelId:"频道编号"，ticketId:"活动编号"}```|结束直播，获取结束直播信息
-blockTicket|[Object]```{channelId:"频道编号"，ticketId:"活动编号",isChat:"是否禁言，0-禁言，1-解除禁言"}```|聊天室设置是否禁言
+blockTicket|[Object]|```{channelId:"频道编号"，ticketId:"活动编号",isChat:"是否禁言，0-禁言，1-解除禁言"}```|聊天室设置是否禁言
 mzee|-|-|事件处理对象(见表2.1)
 
 ### 2.1 事件处理对象列表
@@ -137,4 +137,18 @@ Page({
         ...
     },
 })
+```
+
+## 四、版本更新
+
+> 盟主直播插件版本更新
+
+```javascript
+- v2.0.0版本更新内容
+1. 添加推流功能（支持横屏推流/竖屏推流/语音推流）。
+2. 添加创建直播活动的接口，设置活动观看权限功能。
+3. 添加播放语音直播活动的功能和UI。
+4. 添加二分屏观看直播活动。
+5. 添加检测观看直播活动权限的功能和UI。
+6. 添加后台动态更新直播活动额相关配置功能，持续添加功能中。
 ```
