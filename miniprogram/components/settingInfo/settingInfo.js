@@ -1,5 +1,5 @@
-var mzplugin=requirePlugin('mz-plugin')
-var mzSDK=mzplugin ;
+var mzplugin = require('../../utils/mzSDK')
+var mzSDK=mzplugin.mzSDK;
 // component/settingInfo/settingInfo.js
 Component({
   /**

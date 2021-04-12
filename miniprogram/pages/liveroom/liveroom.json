@@ -9,7 +9,11 @@
     "user-head-icon": "../../components/userHeadIcon/userHeadIcon",
     "quit-page-popup": "../../components/quitPagePopup/quitPagePopup",
     "over-live-state": "../../components/overLiveState/overLiveState",
-    "end-live-state": "../../components/endLiveState/endLiveState"
+    "end-live-state": "../../components/endLiveState/endLiveState",
+    "mz-vote-component":"plugin://mz-plugin/mz-vote-component",
+    "mz-advertRolling-component":"plugin://mz-plugin/mz-advertRolling-component",
+    "mz-advertFullScreen-component":"plugin://mz-plugin/mz-advertFullScreen-component",
+    "mz-qa-component":"plugin://mz-plugin/mz-qa-component"
   },
   "enablePullDownRefresh": false,
   "disableScroll":true

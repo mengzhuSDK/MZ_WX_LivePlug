@@ -3,7 +3,7 @@
 
 import lottie from 'lottie-miniprogram'
 
-var mzplugin = requirePlugin('mz-plugin')
+var mzplugin = require('../../utils/mzSDK');
 const app = getApp();
 
 
@@ -13,26 +13,27 @@ Page({
 
 	data: {
 		//横屏还是竖屏 0 = 横屏， 1 = 竖屏
-		live_style: 0, 
+		live_style: 0,
 		//0是视频，1是音频
-		live_type: 0, 
+		live_type: 0,
 		//观看方式 1免费 2vip 3付费 4密码 5白名单 6F码
-		view_mode: 1, 
+		view_mode: 1,
 		//播放地址
 		videoUrl: "",
 		//封面图地址
-		cover: "", 
+		cover: "",
 		//封面图是否隐藏，只针对live-players
 		coverIsHidden: false,
 		//点赞个数
-		like_num: "", 
+		like_num: "",
 		//0无片头广告，1有片头广告
-		video_advert: 0, 
+		video_advert: 0,
 		//进入直播间的时候观众人数
-		webinar_onlines: 0, 
+		webinar_onlines: 0,
 		//视频起始top
 		playerViewTop: '138rpx',
-		//活动状态 0=未开播，1=直播，2=回放， 3=断流
+		//活动状态 0=未开播，1=直播，2=回放， 3=断流 
+		//根据活动状态来选择video标签还是live-player标签
 		liveState: "0",
 		//isFull  是否是全屏展示
 		isFull: false,
@@ -40,12 +41,16 @@ Page({
 		controlIsHidden: '',
 		//二分屏菜单显示哪个 0 = 互动， 1 = 文档， 2 = 问答
 		menuShowIndex: 0,
-		//活动状态，根据活动状态来选择video标签还是live-player标签
-		ticketStatus: -1,
 		//横屏下菜单字体颜色
 		menuChatColor: "#FF1F60",
 		menuDocumentColor: "#7A7A7A",
 		menuDiscussColor: "#7A7A7A",
+		//回放播放器句柄
+		videoContext: null,
+		//直播播放器句柄
+		playContext: null,
+		//是否展示暖场图的组件
+		isShowFullScreenComponent: false,
 
 		//该活动的所有配置
 		ticketConfig: {
@@ -66,7 +71,7 @@ Page({
 			// 是否隐藏 聊天记录
 			isOpenHide_chat_history: false,
 			// 是否显示投票
-			isOpenVote: true,
+			isOpenVote: 0,
 			// 是否显示文档
 			isOpenDocuments: true,
 			// 是否显示签到
@@ -128,7 +133,14 @@ Page({
 		goodsListData: [],
 		goodsListDataReverse: [],
 		goodsItemPush: [],
+		// 当前显示的消息列表
 		commentList: [],
+		// 所有的消息列表
+		allCommentList: [],
+		// 筛选出来的消息列表
+		filterCommentList: [],
+		// 筛选的规则（需要筛选出来的用户ID列表,默认里面有主播和自己的用户ID）
+		filterConditions: [],
 		scrollY: true,
 		scrollTop: 0,
 		inputHeight: "3.2vw",
@@ -158,8 +170,6 @@ Page({
 		cmdLiveEndTimr: null, //直播结束定时器
 		vioBottom: 26.4,
 
-		videoContext: null,
-
 		screenHeight: 0,
 		screenWidth: 0,
 		// 语音动画是否展示
@@ -172,6 +182,10 @@ Page({
 			isLoadOver: false,
 			oldHeight: 0, //上一次历史聊天记录的高度
 		},
+		//是否只看主播的开关
+		onlyHostIsEnable: false,
+		// 显示键盘的时候，展示出来的点击收回键盘的view
+		showTapHideKeyboard: false,
 		//防录屏
 		recordScreen: {
 			recordScreenInterval: null, //定时器
@@ -182,7 +196,20 @@ Page({
 			isHidden: true, //是否隐藏
 			text: "自定义的防录屏文字", //自定义的防录屏文字
 			textColor: '#FF1F60', //字体颜色
-		}
+		},
+		//是否隐藏滚动广告组件，默认隐藏
+		isHiddenAdvertRolling: true,
+		//文档图片集合
+		documentImgUrls: [],
+		documentTitleName: '',
+		documentCurrentPage: '',
+		documentPageCount: '',
+		// 投票相关
+		isVoteShow: false,
+		//问答相关
+		refreshQAData: false,
+		unreadNum:0,
+
 	},
 
 	//事件处理函数
@@ -221,6 +248,12 @@ Page({
 			mzplugin.mzSDK.mzee.on("complete", _this.getComplete);
 			mzplugin.mzSDK.mzee.on("cmd", _this.getCmd);
 			mzplugin.mzSDK.mzee.on("channel", _this.getChannel);
+
+			wx.onKeyboardHeightChange(res => {
+				if (res.height <= 0) {
+					_this.tapHideKeyboardAction();
+				}
+			})
 		}
 	},
 	onReady: function () {
@@ -230,7 +263,10 @@ Page({
 		this.getGoodsListData();
 		this.getAchorInfo();
 		this.getWebinarToolsList();
-	
+
+		// 获取  video的播放句柄 和 直播的播放句柄
+		this.videoContext = wx.createVideoContext('myVideo')
+		this.playContext = wx.createLivePlayerContext('livePlayer')
 	},
 
 	onUnload: function () {
@@ -260,7 +296,7 @@ Page({
 					context,
 				},
 			})
-		}).exec()	
+		}).exec()
 	},
 
 	//启动防录屏
@@ -348,16 +384,25 @@ Page({
 			return;
 		} else {
 			_this.sendDanmu(res.data.text);
-			_this.setData({
-				commentList: _this.data.commentList.concat([{
-					text: {
-						avatar: res.avatar,
-						user_name: res.user_name,
-						data: {
-							text: res.data.text
-						}
+
+			var aMessage = {
+				text: {
+					avatar: res.avatar,
+					user_name: res.user_name,
+					data: {
+						text: res.data.text
 					}
-				}])
+				}
+			}
+			_this.data.allCommentList.push(aMessage);
+
+			// 判断筛选条件里是否有这条消息的user_id
+			var isHasMe = _this.data.filterConditions.indexOf(res.user_id);
+			if (isHasMe >= 0) {
+				_this.data.filterCommentList.push(aMessage);
+			}
+			_this.setData({
+				commentList: _this.data.onlyHostIsEnable ? _this.data.filterCommentList : _this.data.allCommentList
 			}, () => {
 				_this.setData({
 					scrollTop: _this.data.commentList.length * 1000,
@@ -487,7 +532,9 @@ Page({
 								}
 								break;
 							case "vote": //投票开关
-								_this.data.ticketConfig.isOpenVote = element.is_open;
+								_this.setData({
+									"ticketConfig.isOpenVote": element.is_open
+								})
 								break;
 							case "sign": //签到开关
 								_this.data.ticketConfig.isOpenSign = element.is_open;
@@ -511,7 +558,7 @@ Page({
 								_this.data.ticketConfig.isOpenSpeed = element.is_open;
 								break;
 							default:
-								console.log("未处理的活动配置开关：", res.data.type);
+								console.log("未处理的活动配置开关：", element.type);
 								break;
 						}
 					}
@@ -522,10 +569,22 @@ Page({
 				_this.kickoutUser(res.data.user_id);
 				break;
 			case "*answerNewReplyMsg":
+				_this.setData({
+					unreadNum: res.data.count
+				})
 				console.log("问答：我的提问有一条新的回复，目前未读个数为 ", res.data.count);
 				break;
 			case "*docSwitchPage":
 				console.log("直播过程中，主播切换文档：", res.data.file_name, res.data.url);
+				var urls = []
+				urls.push(res.data.url)
+				_this.setData({
+					documentTitleName: res.data.file_name,
+					documentImgUrls:urls,
+					documentCurrentPage:1
+				} , () =>{
+					console.log('documentImgUrls' , _this.data.documentImgUrls)
+				})
 				break;
 			default:
 				console.log("未处理的cmd命令： ", res.data.type);
@@ -632,7 +691,7 @@ Page({
 	},
 	//频道有新活动开始直播了
 	channelStart: function (ticket_id) {
-		if (ticketId == this.pageInfo.ticketId) {
+		if (ticketId == this.data.pageInfo.ticketId) {
 			this.ticketStart();
 		}
 	},
@@ -655,14 +714,29 @@ Page({
 			limit: _this.data.comments.limit,
 		}
 		mzplugin.mzSDK.getHistory(data).then(function (res) {
+			// 这里过滤只看主播的数据(_this.data.filterConditions，这里是需要过滤的用户id列表)
+			var filterMessage = res.filter(item => {
+				var isFilter = _this.data.filterConditions.indexOf(item.text.user_id);
+				if (isFilter >= 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}, )
+
 			_this.setData({
 				'comments.offset': _this.data.comments.offset + res.length,
 				'comments.isLoadOver': res.length < 20 ? true : false,
-				commentList: res.concat(_this.data.commentList),
+				allCommentList: res.concat(_this.data.allCommentList),
+				filterCommentList: filterMessage.concat(_this.data.filterCommentList),
 			}, () => {
-				console.log(_this.data.commentList);
-				_this.scrollToOldData();
-				wx.hideLoading();
+				_this.setData({
+					commentList: _this.data.onlyHostIsEnable ? _this.data.filterCommentList : _this.data.allCommentList
+				}, () => {
+					console.log(_this.data.commentList);
+					_this.scrollToOldData();
+					wx.hideLoading();
+				})
 			})
 		});
 	},
@@ -686,17 +760,33 @@ Page({
 			limit: _this.data.comments.limit,
 		}
 		mzplugin.mzSDK.getHistory(data).then(function (res) {
+			console.log("过滤条件：", _this.data.filterConditions);
+			// 这里过滤只看主播的数据(_this.data.filterConditions，这里是需要过滤的用户id列表)
+			var filterMessage = res.filter(item => {
+				var isFilter = _this.data.filterConditions.indexOf(item.text.user_id);
+				if (isFilter >= 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}, )
 			_this.setData({
 				'comments.offset': res.length,
 				'comments.isLoadOver': res.length < _this.data.comments.limit ? true : false,
-				commentList: _this.data.commentList.concat(res).concat({
+				allCommentList: [].concat(res).concat({
 					type: "vioTips",
 					info: _this.data.ticketConfig.notice
 				}),
-
+				filterCommentList: [].concat(filterMessage).concat({
+					type: "vioTips",
+					info: _this.data.ticketConfig.notice
+				})
 			}, () => {
-				console.log(_this.data.commentList)
-				_this.scrollToBottom();
+				_this.setData({
+					commentList: _this.data.onlyHostIsEnable ? _this.data.filterCommentList : _this.data.allCommentList
+				}, () => {
+					_this.scrollToBottom();
+				})
 			})
 		});
 	},
@@ -752,7 +842,7 @@ Page({
 		mzplugin.mzSDK.getTicketInfo(data).then(function (res) {
 			mzplugin.mzSDK.connect();
 			var temp_popular = _this.fixPopular(res.popular)
-
+			console.log("playinfo = ", res);
 			_this.data.currentUser.uniqueId = res.unique_id;
 			console.log("活动状态 = " + res.status);
 			var isLive = (res.status == "2" || res.status == "0") ? false : true;
@@ -765,7 +855,7 @@ Page({
 					stateString = "回放";
 				}
 			}
-			if (res.status  == "3") {//断流不显示封面
+			if (res.status == "3") { //断流不显示封面
 				_this.setData({
 					coverIsHidden: true,
 				})
@@ -803,11 +893,13 @@ Page({
 							break;
 						case "vote":
 							console.log("配置是否显示投票");
-							_this.data.ticketConfig.isOpenVote = element.is_open;
+							_this.setData({
+								"ticketConfig.isOpenVote": element.is_open
+							})
 							break;
 						case "sign":
 							console.log("配置是否显示签到，还需要处理签到的数据：", element.content);
-							_this.data.ticketConfig.isOpenSign = element.is_open;
+
 							break;
 						case "prize":
 							console.log("配置是否显示抽奖，还需要处理抽奖的数据：", element.content);
@@ -844,15 +936,15 @@ Page({
 				// live_style: res.live_style, //0是横屏，1是竖屏
 				like_num: res.like_num, //点赞个数
 				cover: res.cover, //封面图
-				ticketStatus: res.status, //设置活动状态，选择使用标签
 				'defaultInfo.channelId': res.channel_id,
 				'defaultInfo.anchorPopularityNum': temp_popular,
 				'defaultInfo.popular': res.popular,
-				liveState: res.status,
+				liveState: res.status, //设置活动状态，选择使用标签
 				'defaultInfo.anchorTicketState': stateString,
 				videoUrl: videoURLString, //视频流地址，直播和断流是rtmp，回放是http
 				chatUid: res.chat_uid, //自己在聊天室里的uid
 				'ticketConfig.notice': cNotice, //消息公告
+				filterConditions: _this.data.filterConditions.concat(res.chat_uid)
 			}, () => {
 				if (res.user_status == 3) { //3是禁言，2是被踢出
 					_this.setData({
@@ -861,6 +953,23 @@ Page({
 				}
 				_this.getRoomIcons();
 				_this.getHistoryInfo();
+				if (_this.data.ticketConfig.isOpenDocuments == 1 && _this.data.liveState == '2') {
+					_this.getDocumentList();
+				}else if(_this.data.ticketConfig.isOpenDocuments == 1 && _this.data.liveState == '1'){
+					_this.getDocumentInfo('')
+				}
+
+				if (_this.data.ticketConfig.isOpenFull_screen == false) { //如果不显示暖场图，那就直接开始播放
+					if (isLive) {
+						_this.playContext.play();
+					} else {
+						_this.videoContext.play();
+					}
+				} else {
+					_this.setData({
+						isShowFullScreenComponent: true
+					})
+				}
 			})
 
 		}, function (err) {
@@ -882,7 +991,7 @@ Page({
 
 	statechange: function (res) {
 		var _this = this;
-		if (res.detail.code == 2004) {//开始播放了
+		if (res.detail.code == 2004) { //开始播放了
 			this.setData({
 				coverIsHidden: true,
 			})
@@ -985,7 +1094,22 @@ Page({
 			_this.startDefaultAnimation();
 		}
 	},
+	// 只看主播开关事件
+	listenerSwitch: function (e) {
+		var _this = this;
+		console.log('只看主播开关的当前状态-----', e.detail.value);
+		this.setData({
+			onlyHostIsEnable: e.detail.value,
+			commentList: e.detail.value ? _this.data.filterCommentList : _this.data.allCommentList
+		}, () => {
+			_this.scrollToBottom();
+		})
 
+	},
+	// 只看主播界面禁止手势向下穿透
+	noPointsEvent: function (e) {
+		console.log("禁止穿透");
+	},
 	//获取主播信息
 	getAchorInfo: function () {
 		var _this = this;
@@ -997,7 +1121,9 @@ Page({
 			_this.setData({
 				'defaultInfo.anchorName': res.nickname,
 				'defaultInfo.anchorPic': res.avatar,
-				'defaultInfo.uid': res.uid
+				'defaultInfo.uid': res.uid,
+				//添加过滤条件消息
+				filterConditions: _this.data.filterConditions.concat(res.uid)
 			})
 		})
 	},
@@ -1116,6 +1242,7 @@ Page({
 	//点击完成按钮时触发
 	userAddComment: function (e) {
 		var _this = this;
+		_this.tapHideKeyboardAction();
 		if (_this.data.ticketConfig.isOpenDisable_chat == true) {
 			wx.showToast({
 				icon: 'none',
@@ -1125,10 +1252,10 @@ Page({
 		}
 
 		var data = e.detail.value;
-		var commentList_temp = [].concat(_this.data.commentList)
 		console.log("唯一标识符和昵称都不能为空");
 		console.log("唯一标识符：", _this.data.currentUser.uniqueId + "      昵称：", _this.data.currentUser.nickName)
-		commentList_temp.push({
+
+		var aMessage = {
 			text: {
 				user_name: _this.data.currentUser.nickName,
 				avatar: _this.data.currentUser.avatarUrl,
@@ -1136,12 +1263,19 @@ Page({
 					text: data
 				}
 			}
-		})
+		}
+		_this.data.allCommentList.push(aMessage);
+
+		// 判断筛选条件里是否有自己的chatUid
+		var isHasMe = _this.data.filterConditions.indexOf(_this.data.chatUid);
+		if (isHasMe >= 0) {
+			_this.data.filterCommentList.push(aMessage);
+		}
 
 		_this.setData({
 			test: "",
 			inputShow: false,
-			commentList: commentList_temp,
+			commentList: _this.data.onlyHostIsEnable ? _this.data.filterCommentList : _this.data.allCommentList,
 			scrollTop: _this.data.commentList.length * 1000,
 		});
 		mzplugin.mzSDK.push(data);
@@ -1155,8 +1289,7 @@ Page({
 		var _this = this;
 		// 发送弹幕
 		if (data.length > 0 && _this.data.ticketConfig.isOpenDanMu == true) {
-			var videoContext = wx.createVideoContext('myVideo')
-			videoContext.sendDanmu({
+			this.videoContext.sendDanmu({
 				text: data,
 				color: "#FF1F60"
 			})
@@ -1170,12 +1303,27 @@ Page({
 		var height = e.detail.height
 		_this.setData({
 			inputHeight: height + "px",
-			classNameKeyboardUp: "user-addcomment-up"
+			classNameKeyboardUp: "user-addcomment-up",
+			showTapHideKeyboard: true
 		});
 	},
 
+	// 点击空白处隐藏键盘
+	tapHideKeyboardAction: function (e) {
+		var _this = this;
+		wx.hideKeyboard({
+			success: (res) => {},
+		})
+		_this.setData({
+			inputHeight: '3.2vw',
+			classNameKeyboardUp: "user-addcomment",
+			inputShow: false,
+			showTapHideKeyboard: false
+		});
+	},
 	//文本框失去焦点-处理键盘高度
 	userAddCommentblur: function (e) {
+		return;
 		var _this = this;
 		_this.setData({
 			inputHeight: '3.2vw',
@@ -1453,8 +1601,8 @@ Page({
 		this.auani.play();
 	},
 
-	bindrendererrors: function (res) {	
-		console.log("ccc: ",res)
+	bindrendererrors: function (res) {
+		console.log("ccc: ", res)
 	},
 
 	// 当暂停播放时  - video标签
@@ -1486,12 +1634,151 @@ Page({
 
 	// 横屏菜单按钮 问答 点击事件
 	menuDiscussClick: function () {
+		var that = this
 		this.setData({
 			menuChatColor: "#7A7A7A",
 			menuDocumentColor: "#7A7A7A",
 			menuDiscussColor: "#FF1F60",
 			menuShowIndex: 2
+		} , () =>{
+			//切换到问答主动刷新数据
+			that.setData({
+				refreshQAData: true
+			})
 		})
-	}
+	},
+
+	//滚动广告相关
+	advertRollingComponentIsHidden: function (e) {
+		console.log("滚动广告是否隐藏：", e);
+		this.setData({
+			isHiddenAdvertRolling: e.detail.isHidden
+		})
+	},
+
+	advertRollingComponentClick: function (e) {
+		console.log("滚动广告 点击了某个广告:", e);
+	},
+
+	//获取暖场图相关
+	advertFullScreenEnd: function (e) {
+		console.log("暖场图 结束了:", e);
+		this.advertFullScreenOverToPlay();
+	},
+	advertFullScreenTap: function (e) {
+		console.log("暖场图 点击了某个广告:", e);
+		this.advertFullScreenOverToPlay();
+	},
+	// 暖场图结束了，处理播放事宜
+	advertFullScreenOverToPlay: function () {
+		var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
+		if (isLive) {
+			this.playContext.play();
+		} else {
+			this.videoContext.play();
+		}
+		this.setData({
+			isShowFullScreenComponent: false
+		})
+	},
+
+	//文档相关
+	getDocumentList: function () {
+		var that = this
+		mzplugin.mzSDK.getDocumentList(this.data.defaultInfo.channelId, this.data.pageInfo.ticketId).then(function (res) {
+			console.log('获取文档列表成功===> ', res)
+			if (res.length > 0) {
+				that.getDocumentInfo(res[0].id)
+			}
+		}, function (error) {
+			console.log('获取文档列表失败===> ', error)
+		})
+	},
+
+	getDocumentInfo: function (document_id) {
+		var that = this
+		mzplugin.mzSDK.getDocumentInfo(this.data.defaultInfo.channelId, this.data.pageInfo.ticketId, document_id).then(function (res) {
+			console.log('获取文档详情成功===> ', res)
+			var urls = []
+			if (that.data.liveState == "2") {
+				var length = Number.parseInt(res.page_count) + 1
+				for (let index = 1; index < length; index++) {
+					var url = res.access_url + index + ".png" + res.scale;
+					console.log('文档图片地址：', url)
+					urls.push(url)
+				}
+				that.setData({
+					documentImgUrls: urls,
+					documentTitleName: res.file_name,
+					documentCurrentPage: res.current_page,
+					documentPageCount: res.page_count,
+				}, () => {
+					console.log('documentTitleName  ', that.data.documentTitleName)
+				})
+			}else if (that.data.liveState == "1"){
+				urls.push(res.access_url + res.current_page + '.png' + res.scale)
+				that.setData({
+					documentImgUrls: urls,
+					documentTitleName: res.file_name,
+					documentCurrentPage: res.current_page,
+					documentPageCount: res.page_count,
+				})
+			}
+		}, function (error) {
+			console.log('获取文档详情失败===> ', error)
+		})
+	},
+
+	/**
+	 * 放大点击事件
+	 */
+	largeClick: function () {
+		var that = this
+		var urls = []
+		urls.push(that.data.documentImgUrls[that.data.documentCurrentPage - 1])
+		wx.previewImage({
+			showmenu: false,
+			urls: urls //需要预览的图片链接列表,
+		});
+	},
+
+	/**
+	 * 文档滑动切换事件
+	 * @param {*} e 
+	 */
+	documentPageChange: function(e){
+		this.setData({
+			documentCurrentPage: e.detail.current + 1
+		})
+	},
+
+	/**
+	 * 右点击
+	 */
+	documentRightClick: function () {
+		var page = this.data.documentCurrentPage + 1
+		this.setData({
+			documentCurrentPage: page
+		})
+	},
+
+	/**
+	 * 左点击
+	 */
+	documentLeftClick: function () {
+		var page = this.data.documentCurrentPage - 1
+		this.setData({
+			documentCurrentPage: page
+		})
+	},
+
+	voteClick: function () {
+		var that = this
+		this.setData({
+			isVoteShow: true
+		}, () => {
+			console.log(that.data.isVoteShow)
+		})
+	},
 
 })

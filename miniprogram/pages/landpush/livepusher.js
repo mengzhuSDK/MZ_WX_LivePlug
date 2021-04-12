@@ -2,7 +2,7 @@ const {
   op
 } = require("../image/voice_live_am");
 
-var mzplugin = requirePlugin('mz-plugin')
+var mzplugin = require('../../utils/mzSDK')
 const app = getApp();
 
 Page({

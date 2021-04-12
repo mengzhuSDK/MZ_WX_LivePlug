@@ -16,17 +16,19 @@
     "navigationStyle": "custom",
     "renderingMode": "mixed"
   },
+  "plugins": {
+    "mz-plugin": { "version": "2.1.0", "provider": "wx2d4303f54f4d98ab" }
+  },
   "useExtendedLib": {
     "weui": true
   },
+  "usingComponents":{
+    "mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+    "mp-dialog": "weui-miniprogram/dialog/dialog",
+    "mp-actionSheet": "weui-miniprogram/actionsheet/actionsheet"
+  },
   "sitemapLocation": "sitemap.json",
   "enablePullDownRefresh": false,
-  "disableScroll": true,
-  "plugins": {
-    "mz-plugin": {
-      "version": "2.0.0",
-      "provider": "wx2d4303f54f4d98ab"
-    }
-  }
+  "disableScroll": true
 }
 

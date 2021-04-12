@@ -4,7 +4,7 @@ const {
 
 import lottie from 'lottie-miniprogram'
 
-var mzplugin = requirePlugin('mz-plugin')
+var mzplugin = require('../../utils/mzSDK')
 const app = getApp();
 
 Page({

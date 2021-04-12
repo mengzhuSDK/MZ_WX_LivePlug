@@ -1,5 +1,8 @@
 /**index.wxss**/
 @import "../../component/comments/index.wxss";
+page{
+	height: 100%;
+}
 .container{
 	position: absolute;
 	width: 100%;
@@ -50,8 +53,8 @@
 }
 
 .menu {
-	margin-top: -4vh;
-	column-count: 1;/* 变成3就是3个菜单了*/
+	/* margin-top: -4vh; */
+	column-count: 3;/* 变成3就是3个菜单了*/
 	width: 100vw;
 	height: 6.2vw;
 	text-align: center;
@@ -60,12 +63,6 @@
 .chat {
 	display: flex;
   align-items: center;
-	justify-content: center;
-}
-
-.document {
-	display: flex;
-	align-items: center;
 	justify-content: center;
 }
 
@@ -256,16 +253,17 @@
 	position: fixed;
 	left: 0;
 	/* padding: 2.13vw 4vw; */
-	background-color: rgba(255, 255, 255, 1)
+	background-color: rgba(255, 255, 255, 1);
+	z-index: 100;
   }
   
   .user-addcomment-up input{
 	display: inline-block;
-	width: 89.33vw;
+	width: 60.33vw;
 	height: 8.53vw;
 	position: absolute;
 	top: 2.135vw;
-	left: 4vw;
+	left: 33vw;
 	line-height: 8.53vw;
 	color:rgba(0,0,0,0.6);
 	font-size: 3.73vw;
@@ -278,7 +276,36 @@
   
   .user-addcomment-up .input-placeholder{
 	color:rgba(187,187,187,1)
-  }
+	}
+
+	.onlyHost {
+		width: 24vw;
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.onlyHost .onlyHost-title {
+		height: 100%;
+		width: 16vw;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin: auto;
+		color: #333333;
+		font-size: 29rpx;
+	}
+
+	.onlyHost .onlyHost-switch {
+		margin-left: 5rpx;
+		height: 100%;
+		width: 6vw;
+		display: flex;
+		flex-direction: row;
+	}
+
 .goods-info {
 	width: 50vw;
 	height: 31.27vw;
@@ -784,9 +811,16 @@
 	color: rgba(255, 255, 255, 1);
 	font-size: 18px;
 }
+.tapHideKeyboardView {
+	position: absolute;
+	left: 0rpx;
+	top: 0rpx;
+	width: 100%;
+	z-index: 9999;
+}
 .text-input{
     /* display: inline-block; */
-    width: 32vw;
+    width: 64vw;
     height: 5.73vw;
     line-height: 2.73vw;
 	position: absolute;
@@ -877,4 +911,134 @@
 	margin-top: 208rpx;
 	z-index: 8;
 
+}
+
+.rightButtonList{
+	position: absolute;
+	padding-top: 16rpx;
+	right: 40rpx;
+	display: flex;
+	flex-direction: column;
+	width: 88rpx;
+
+}
+.rightButton{
+	margin-top: 24rpx;
+	width: 88rpx;
+	height: 88rpx;
+}
+.document {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+}
+
+.documentTitle{
+	display: flex;
+	width: 100%;
+	height: 88rpx;
+	flex-direction: row;
+	align-items: center;
+}
+.documentTitleImg{
+	width: 48rpx;
+	height: 48rpx;
+	margin-left: 32rpx;
+	margin-right: 12rpx;
+}
+.documentTitleText{
+	line-height: 88rpx;
+	font-size: 28rpx;
+	color: white;
+	width: 626rpx;
+	margin-left: 32rpx;
+	margin-right: 32rpx;
+}
+.documentInfo{
+	flex: 1;
+	position: relative;
+	width: 100%;
+}
+.documentInfoNoData{
+	flex: 1;
+	position: relative;
+	width: 100%;
+	display: flex;
+	font-size: 30rpx;
+	align-items: center;
+	justify-content: center;
+	color: white;
+}
+.documentInfoSwiper{
+	position: absolute;
+	margin-left: 6vw;
+	width: 88vw;
+	height: 100%;
+}
+.swiper-image{
+	width: 88vw;
+	height: 100%;
+}
+.documentPages{
+	position: absolute;
+	display: flex;
+	width: 400rpx;
+	height: 60rpx;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 0px 0px 8px 8px;
+	font-size: 24rpx;
+	color: white;
+	line-height: 60rpx;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	justify-content: center;
+}
+.documentEnlarge{
+	position: absolute;
+	width: 88rpx;
+	height: 88rpx;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	bottom: 20rpx;
+}
+.documentRight{
+	position: absolute;
+	width: 60rpx;
+	height: 80rpx;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8rpx 0px 0px 8rpx;
+}
+.documentLeft{
+	position: absolute;
+	width: 60rpx;
+	height: 80rpx;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0px 8rpx 8rpx 0px;
+}
+.arrow{
+	width: 48rpx;
+	height: 48rpx;
+}
+
+.iphoneXBottom{
+    padding-bottom: constant(safe-area-inset-bottom); /*兼容 IOS<11.2*/
+    padding-bottom: env(safe-area-inset-bottom); /*兼容 IOS>11.2*/
 }

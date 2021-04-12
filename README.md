@@ -1,4 +1,3 @@
-
 # 目录说明
 ## 目录结构
 ```
@@ -30,10 +29,13 @@
 
 * 聊天
 文字聊天、用户信息获取、聊天历史记录是否显示、在线观众列表、
-禁言用户、踢出用户、聊天公告设置
+禁言用户、踢出用户、聊天公告设置、只看主播
 
 * 商品
 商品列表、循环播放推荐商品、
+
+* 营销功能
+文档、问答、投票、滚动广告、开屏暖场图
 
 ```
 # 接口说明
@@ -45,7 +47,7 @@
 ```javascript
   "plugins": {
     "mz-plugin": {
-      "version": "2.0.0",
+      "version": "2.1.0",
       "provider": "wx2d4303f54f4d98ab"
     }
   }
@@ -88,6 +90,15 @@ startLive|[Object]|```{ticketId:"活动编号"，live_tk:"活动凭证"，unique
 stopLive|[Object]|```{channelId:"频道编号"，ticketId:"活动编号"}```|结束直播，获取结束直播信息
 blockTicket|[Object]|```{channelId:"频道编号"，ticketId:"活动编号",isChat:"是否禁言，0-禁言，1-解除禁言"}```|聊天室设置是否禁言
 mzee|-|-|事件处理对象(见表2.1)
+getDocumentList(channel_id , ticketId)|[Object]|channel_id 频道编号<br>ticketId 活动编号 |获取直播关联的文档列表
+getDocumentInfo(channel_id , ticketId , document_id)|{Object}|channel_id 频道编号<br>ticketId 活动编号<br>document_id 文档id|获取文档详情
+getChannelVote(ticketId)|{Object}|ticketId 活动编号|获取投票详情数据
+getVoteOptions(id)|[Object]|id 投票id|获取投票数据列表
+postVote(id , option_id , ticket_id)|-|id 投票ID<br>option_id 投票活动选项ID<br>ticket_id 活动id|提交投票选项
+getAQList(ticket_id , is_new_reply , offset , limit)|[Object]|ticket_id 活动id<br>is_new_reply 是否查询最新未读回复 0:否 1:是<br>offset 分页<br>limit 条数|获取问答列表
+postQuestion(ticket_id , content , is_anonymous)|-|ticket_id 活动id<br>content 提问内容<br>is_anonymous 	是否匿名提问 0:否 1:是|提交问答
+getAdvertScreen({ticketId})|{Object}|```{ticketId:活动编号}```|获取暖场图
+getAdvertRolling({ticketId})|[Object]|```{ticketId:活动编号}```|获取活动的滚动广告
 
 ### 2.1 事件处理对象列表
 事件名称|接收参数|描述
@@ -158,8 +169,156 @@ Page({
     },
 })
 ```
+## 四、模板组件
+### 1、分类、白名单、F码、列表弹出框
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-category-component":"plugin://mz-plugin/mz-category-component",
+    "mz-fcode-component":"plugin://mz-plugin/mz-fcode-component",
+    "mz-whitelist-component":"plugin://mz-plugin/mz-whitelist-component"
+  }
+```
 
-## 四、版本更新
+#### *示例代码
+``` javascript
+<!-- wxml代码 -->
+<!-- 分类弹窗 -->
+<mz-category-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showCategory}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindCategoryClose"
+></mz-category-component>
+
+<!-- 白名单弹窗 -->
+<mz-fcode-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showFCode}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindFCodeClose"
+></mz-fcode-component>
+
+<!-- F码弹窗 -->
+<mz-whitelist-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showWhiteList}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindWhitelistClose"
+></mz-whitelist-component>
+```
+#### *组件属性列表
+
+| 属性            | 类型         | 默认值      | 必填 | 说明                                                         |
+| :-------------- | ------------ | ----------- | ---- | ------------------------------------------------------------ |
+| mzViewHeignt    | String       | 996rpx      | 否   | 列表高度                                                     |
+| maskBackground  | String       | "#00000000" | 否   | 蒙层背景颜色                                                 |
+| mzViewShow      | Boolean      |             | 否   | 窗口是否显示                                                 |
+| mzMaskClickHide | Boolean      |             | 否   | 点击蒙层是否隐藏                                             |
+| bindclose       | eventhandler |             | 否   | 关闭事件，detail为 {{isSure: true, data: {…}}}，data为data: {name: "艺术", id: "103"}，isSure是否是点击确定关闭，只有为true，data才有数据 |
+
+### 2、问答组件
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-qa-component":"plugin://mz-plugin/mz-qa-component"
+  }
+```
+#### *示例代码
+``` javascript
+<!-- wxml代码 -->
+<mz-qa-component ticketId="{{pageInfo.ticketId}}" viewHeight="100%"></mz-qa-component>
+```
+#### *组件属性列表
+
+| 属性        | 类型    | 默认值 | 必填 | 说明                                   |
+| :---------- | ------- | ------ | ---- | -------------------------------------- |
+| viewHeight  | String  | 840rpx | 否   | 组件高度                               |
+| ticketId    | String  |        | 是   | 活动编号                               |
+| unreadNum   | Number  |        | 否   | 外部设置未读消息数量                   |
+| refreshData | Boolean | false  | 否   | 数据监听，每次设置为true，主动刷新数据 |
+
+### 3、投票组件
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-vote-component":"plugin://mz-plugin/mz-vote-component",
+  }
+```
+#### *示例代码
+``` javascript
+<!-- wxml代码 -->
+<mz-vote-component
+ bindclose="voteComponentClose"
+ isVoteShow="{{isVoteShow}}"
+ mzVoteViewHeignt='996rpx'
+ ticketId="{{pageInfo.ticketId}}"
+></mz-vote-component>
+```
+#### *组件属性列表
+
+| 属性             | 类型         | 默认值 | 必填 | 说明             |
+| :--------------- | ------------ | ------ | ---- | ---------------- |
+| mzVoteViewHeignt | String       | 840rpx | 否   | 组件高度         |
+| ticketId         | String       |        | 是   | 活动编号         |
+| isVoteShow       | Boolean      |        | 否   | 控制组件是否显示 |
+| bindclose        | eventhandler | false  | 否   | 关闭事件         |
+
+### 4、滚动广告组件
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-advertRolling-component":"plugin://mz-plugin/mz-advertRolling-component",
+  }
+```
+#### *示例代码
+``` javascript
+<!-- wxml代码 -->
+	<!-- 滚动广告组件 -->
+	<mz-advertRolling-component
+	 wx:if="{{pageInfo.ticketId && live_style==0}}"
+	 ticketId="{{pageInfo.ticketId}}"
+	 bind:hiddenChange="advertRollingComponentIsHidden"
+	 bind:advertClick="advertRollingComponentClick"
+	 style="margin-top:-5.5vh"
+	>
+	</mz-advertRolling-component>
+```
+#### *组件属性列表
+
+| 属性       | 类型    | 默认值 | 必填 | 说明                                                         |
+| :--------- | ------- | ------ | ---- | ------------------------------------------------------------ |
+| interval   | Number  | 6500   | 否   | 自动切换的毫秒数                                             |
+| ticketId   | String  |        | 是   | 活动编号                                                     |
+| isOnlySlot | Boolean | false  | 否   | 是否启用自定义slot，如果启用，就会放弃本组件的所有内容，完全自定义显示的内容 |
+
+### 5、暖场图组件
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-advertFullScreen-component":"plugin://mz-plugin/mz-advertFullScreen-component",
+  }
+```
+#### *示例代码
+``` javascript
+<!-- wxml代码 -->
+<!-- 暖场图广告组件 -->
+<mz-advertFullScreen-component
+ wx:if="{{isShowFullScreenComponent}}"
+ hidden="{{!isShowFullScreenComponent}}"
+ ticketId="{{pageInfo.ticketId}}"
+ bind:advertFullScreenFinish="advertFullScreenEnd"
+ bind:advertFullScreenClick="advertFullScreenTap"
+>
+</mz-advertFullScreen-component>
+```
+#### *组件属性列表
+
+| 属性       | 类型    | 默认值 | 必填 | 说明                                                         |
+| :--------- | ------- | ------ | ---- | ------------------------------------------------------------ |
+| ticketId   | String  |        | 是   | 活动编号                                                     |
+| isOnlySlot | Boolean | false  | 否   | 是否启用自定义slot，如果启用，就会放弃本组件的所有内容，完全自定义显示的内容 |
+## 五、版本更新
 
 > 盟主直播插件版本更新
 
@@ -171,4 +330,14 @@ Page({
 - 添加二分屏观看直播活动。
 - 添加检测观看直播活动权限的功能和UI。
 - 添加后台动态更新直播活动的相关配置功能，持续添加功能中。
+```
+```javascript
+2.1.0 更新内容
+- 分类，白名单，F码设置为组件。
+- 添加文档查看功能。
+- 添加普通投票功能组件。
+- 添加问答功能组件。
+- 添加滚动广告功能组件。
+- 添加开屏暖场图功能组件
+- 添加聊天列表只显示主播功能。
 ```

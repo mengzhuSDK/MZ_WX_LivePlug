@@ -1,4 +1,4 @@
-var mzplugin = requirePlugin('mz-plugin')
+var mzplugin = require('../../utils/mzSDK');
 
 const app = getApp();
 

@@ -6,6 +6,7 @@
 >
 
 </mp-navigation-bar>
+
 <view class="container">
 	<scroll-view class="container" scroll-y="{{true}}">
 		<view class="container-top">
@@ -221,35 +222,6 @@
 		>语音直播
 		</button>
 	</view>
-	<!-- 分类弹窗 -->
-	<mp-actionSheet
-	 bindactiontap="categoryItemClick"
-	 show="{{showCategory}}"
-	 actions="{{categoryGroup}}"
-	 title="选择分类"
-	>
-
-	</mp-actionSheet>
-
-	<!-- 白名单弹窗 -->
-	<mp-actionSheet
-	 bindactiontap="whiteListItemClick"
-	 show="{{showWhiteList}}"
-	 actions="{{whiteListGroup}}"
-	 title="选择白名单"
-	>
-
-	</mp-actionSheet>
-
-	<!-- F码弹窗 -->
-	<mp-actionSheet
-	 bindactiontap="fCodeItemClick"
-	 show="{{showFCode}}"
-	 actions="{{fCodeGroup}}"
-	 title="选择F码"
-	>
-
-	</mp-actionSheet>
 
 	<!-- 当前正有直播弹窗 -->
 	<mp-dialog
@@ -263,4 +235,28 @@
 		<view>当前直播间正在直播，是否结束此直播活动！</view>
 	</mp-dialog>
 </view>
+
+<!-- 分类弹窗 -->
+<mz-category-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showCategory}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindCategoryClose"
+></mz-category-component>
+
+<!-- 白名单弹窗 -->
+<mz-fcode-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showFCode}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindFCodeClose"
+></mz-fcode-component>
+
+<!-- F码弹窗 -->
+<mz-whitelist-component
+ mzViewHeignt='996rpx'
+ mzViewShow="{{showWhiteList}}"
+ mzMaskClickHide="{{true}}"
+ bindclose="bindWhitelistClose"
+></mz-whitelist-component>
 

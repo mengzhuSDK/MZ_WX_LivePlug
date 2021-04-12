@@ -1,6 +1,6 @@
 // miniprogram/pages/createactivity.js
 
-var mzplugin = requirePlugin('mz-plugin')
+var mzplugin = require('../../utils/mzSDK');
 const app = getApp();
 
 Page({
@@ -49,13 +49,10 @@ Page({
 
     //分类相关
     showCategory: false,
-    categoryGroup: [],
     // 权限相关
     view_mode: 1, //1,免费，5白名单，6F码
     showWhiteList: false,
-    whiteListGroup: [],
     showFCode: false,
-    fCodeGroup: [],
 
     // 当前登录用户
     currentUser: {
@@ -83,22 +80,23 @@ Page({
     var _this = this;
     console.log(app.globalData.userInfo)
     this.setData({
-      "activityInfo.channelId":options.channelId
+      "activityInfo.channelId": options.channelId
     })
     // 从全局复制出来用户信息
     wx.getUserInfo({
       success: function (res) {
         console.log(res)
         if (res.userInfo) {
-            _this.data.currentUser.nickName = res.userInfo.nickName,
+          _this.data.currentUser.nickName = res.userInfo.nickName,
             _this.data.currentUser.avatarUrl = res.userInfo.avatarUrl
           //保存到本地缓存里
           app.globalData.userInfo.nickName = _this.data.currentUser.nickName;
           app.globalData.userInfo.avatarUrl = _this.data.currentUser.avatarUrl;
         }
-      }, fail: function(){
-          _this.data.currentUser.nickName =  "主播名称",
-          _this.data.currentUser.avatarUrl =  "http://s1.t.zmengzhu.com/upload/img/50/6d/506da693ecb2cf6f2fd0e3e92656dde4.png"
+      },
+      fail: function () {
+        _this.data.currentUser.nickName = "主播名称",
+          _this.data.currentUser.avatarUrl = "http://s1.t.zmengzhu.com/upload/img/50/6d/506da693ecb2cf6f2fd0e3e92656dde4.png"
         //保存到本地缓存里
         app.globalData.userInfo.nickName = _this.data.currentUser.nickName;
         app.globalData.userInfo.avatarUrl = _this.data.currentUser.avatarUrl;
@@ -188,170 +186,98 @@ Page({
   /**
    * 分类选择事件
    */
-  categoryItemClick(e) {
-    var id = e.detail.value
-    this.setData({
-      category_id: id,
-      "activityInfo.category_id": id,
-    })
-    var name = this.data.categoryName
-    var groups = this.data.categoryGroup
-    for (let index = 0; index < groups.length; index++) {
-      const element = groups[index];
-      if (id == element.value) {
-        element.type = "warn"
-        name = element.text
+  bindCategoryClose: function (e) {
+    console.log("分类点击 ====   ", e)
+    var isSure = e.detail.isSure
+    var data = e.detail.data
+    var id = data.id
+    var name = data.name
+    if (isSure) {
+      if (id) {
+        this.setData({
+          category_id: id,
+          "activityInfo.category_id": id,
+          categoryName: name,
+        })
       } else {
-        element.type = "default"
+        this.setData({
+          category_id: '',
+          "activityInfo.category_id": '',
+          categoryName: '未选择',
+        })
       }
     }
-    this.setData({
-      categoryGroup: groups,
-      categoryName: name,
-      showCategory: false
-    })
   },
 
-  /**
-   * 获取分类列表
-   */
   getCategoryList: function () {
     var that = this;
-    if (that.data.categoryGroup.length != 0) {
-      that.setData({
-        showCategory: true,
-      })
-    } else {
-      mzplugin.mzSDK.getCategoryList().then(function (res) {
-        var groups = []
-        for (var index = 0; index < res.length; index++) {
-          groups[index] = {
-            text: res[index].name,
-            type: 'default',
-            value: res[index].id
-          }
-        }
-        that.setData({
-          showCategory: true,
-          categoryGroup: groups
-        })
-
-      }, function (err) {
-        console.log(err);
-      })
-    }
-  },
-
-  /**
-   * baimingd选择事件
-   */
-  whiteListItemClick(e) {
-    var id = e.detail.value
-    this.setData({
-      view_mode: 5,
-      "activityInfo.view_mode": 5,
-      "activityInfo.white_id" : id,
+    that.setData({
+      showCategory: true,
     })
-    var groups = this.data.whiteListGroup
-    for (let index = 0; index < groups.length; index++) {
-      const element = groups[index];
-      if (id == element.value) {
-        element.type = "warn"
-      } else {
-        element.type = "default"
-      }
-    }
-    this.setData({
-      whiteListGroup: groups,
-      showWhiteList: false
-    })
-  },
-
-  /**
-   * 获取白名单列表
-   */
-  getWhiteList: function () {
-    var that = this;
-    if (that.data.whiteListGroup.length != 0) {
-      that.setData({
-        showWhiteList: true,
-      })
-    } else {
-      mzplugin.mzSDK.getWhiteList().then(function (res) {
-        console.log(res)
-        var groups = []
-        for (var index = 0; index < res.list.length; index++) {
-          groups[index] = {
-            text: res.list[index].name,
-            type: 'default',
-            value: res.list[index].id
-          }
-        }
-        that.setData({
-          showWhiteList: true,
-          whiteListGroup: groups
-        })
-
-      }, function (err) {
-        console.log(err);
-      })
-    }
   },
 
   /**
    * F码选择事件
    */
-  fCodeItemClick(e) {
-    var id = e.detail.value
-    this.setData({
-      view_mode: 6,
-      "activityInfo.view_mode" : 6,
-      "activityInfo.fcode_id" : id,
-    })
-    var groups = this.data.fCodeGroup
-    for (let index = 0; index < groups.length; index++) {
-      const element = groups[index];
-      if (id == element.value) {
-        element.type = "warn"
+  bindFCodeClose: function (e) {
+    console.log("F码点击 ====   ", e)
+    var isSure = e.detail.isSure
+    var data = e.detail.data
+    var id = data.id
+    var name = data.name
+    if (isSure) {
+      if (id) {
+        this.setData({
+          view_mode: 6,
+          "activityInfo.view_mode": 6,
+          "activityInfo.fcode_id": id,
+        })
       } else {
-        element.type = "default"
+        this.setData({
+          view_mode: 1,
+          "activityInfo.view_mode": 1,
+        })
       }
     }
-    this.setData({
-      fCodeGroup: groups,
-      showFCode: false
+  },
+
+  getFCodeList: function () {
+    var that = this;
+    that.setData({
+      showFCode: true,
     })
   },
 
   /**
-   * 获取F码列表
+   * 白名单选择事件
    */
-  getFCodeList: function () {
-    var that = this;
-    if (that.data.fCodeGroup.length != 0) {
-      that.setData({
-        showFCode: true,
-      })
-    } else {
-      mzplugin.mzSDK.getFCodeList().then(function (res) {
-        console.log(res)
-        var groups = []
-        for (var index = 0; index < res.length; index++) {
-          groups[index] = {
-            text: res[index].name,
-            type: 'default',
-            value: res[index].id
-          }
-        }
-        that.setData({
-          showFCode: true,
-          fCodeGroup: groups
-        })
+  bindWhitelistClose: function (e) {
+    console.log("F码点击 ====   ", e)
+    var isSure = e.detail.isSure
+    var data = e.detail.data
+    var id = data.id
+    var name = data.name
+    if (isSure) {
+      if (id) {
+        this.setData({
+          view_mode: 5,
+          "activityInfo.view_mode": 5,
+          "activityInfo.white_id": id,
 
-      }, function (err) {
-        console.log(err);
-      })
+        })
+      } else {
+        this.setData({
+          view_mode: 1,
+          "activityInfo.view_mode": 1,
+        })
+      }
     }
+  },
+  getWhiteList: function () {
+    var that = this;
+    that.setData({
+      showWhiteList: true,
+    })
   },
 
   /**
@@ -362,26 +288,6 @@ Page({
       view_mode: 1,
       "activityInfo.view_mode": 1,
     })
-    if (this.data.fCodeGroup.length != 0) {
-      var groups = this.data.fCodeGroup
-      for (let index = 0; index < groups.length; index++) {
-        const element = groups[index];
-        element.type = "default"
-      }
-      this.setData({
-        fCodeGroup: groups,
-      })
-    }
-    if (this.data.whiteListGroup.length != 0) {
-      var groups = this.data.whiteListGroup
-      for (let index = 0; index < groups.length; index++) {
-        const element = groups[index];
-        element.type = "default"
-      }
-      this.setData({
-        whiteListGroup: groups,
-      })
-    }
   },
 
   beautfyClick(e) {

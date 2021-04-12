@@ -1,0 +1,45 @@
+<view class="document">
+	<view class="documentTitle" hidden="{{documentImgUrls.length == 0}}">
+		<image
+		 class="documentTitleImg"
+		 src="/images/icon_document_list.png"
+		 hidden="{{liveState != '2'}}"
+		/>
+		<view class="documentTitleText oneLineText">{{documentTitleName}}</view>
+	</view>
+	<view class="documentInfo" hidden="{{documentImgUrls.length == 0}}">
+		<swiper
+		 class="documentInfoSwiper"
+		 current="{{documentCurrentPage - 1}}"
+		 bindchange="documentPageChange"
+		>
+			<block wx:for="{{documentImgUrls}}">
+				<swiper-item>
+					<image class="swiper-image" src="{{item}}" />
+				</swiper-item>
+			</block>
+		</swiper>
+		<view hidden="{{liveState != '2'}}" class="documentPages">{{documentCurrentPage + '/' + documentPageCount}}</view>
+		<image
+		 class="documentEnlarge"
+		 src="../../images/icon_enlarge.png"
+		 bind:tap="largeClick"
+		/>
+		<view
+		 class="documentRight"
+		 bind:tap="documentRightClick"
+		 hidden="{{documentCurrentPage == documentPageCount || liveState != '2'}}"
+		>
+			<image class="arrow" src="../../images/icon_arrow_right.png" />
+		</view>
+		<view
+		 class="documentLeft"
+		 bind:tap="documentLeftClick"
+		 hidden="{{documentCurrentPage == 1 || liveState != '2'}}"
+		>
+			<image class="arrow" src="../../images/icon_arrow_left.png" />
+		</view>
+	</view>
+	<view class="documentInfoNoData" hidden="{{documentImgUrls.length > 0}}">暂无数据</view>
+</view>
+

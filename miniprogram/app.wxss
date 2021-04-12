@@ -7,3 +7,11 @@
   justify-content: space-between;
   box-sizing: border-box;
 } 
+.oneLineText{
+  /*超出部分隐藏*/
+	overflow:hidden;
+	/*不换行*/
+	white-space:nowrap;
+	/*添加...*/
+	text-overflow:ellipsis;
+}

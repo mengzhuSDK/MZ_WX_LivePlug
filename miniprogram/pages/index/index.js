@@ -1,13 +1,12 @@
 
-var mzplugin = requirePlugin('mz-plugin');
-// pages/index/index.js
+var mzplugin = require('../../utils/mzSDK')
 const app = getApp();
 
 Page({
   data: {
 
     ticketId: "",
-    ticketIdDefault: "10181778",
+    ticketIdDefault: "10181510",
     userInfo: {
       avatarUrl: '',
       nickName: '',
@@ -15,8 +14,8 @@ Page({
       phone: ''
     },
 
-    appId: "2020121810103437745",
-    secret: "x6Kfsjsx89f1fcumHUVsd0u7u1z4EDjdx9d2jWsh9bB8EH70i9IYfeA79WV7WHH1",
+    appId: "",
+    secret: "",
     channelId: '',
   },
 

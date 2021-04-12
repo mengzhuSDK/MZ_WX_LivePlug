@@ -1,8 +1,8 @@
 {
   "usingComponents": {
-    "mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
-    "mp-dialog": "weui-miniprogram/dialog/dialog",
-    "mp-actionSheet": "weui-miniprogram/actionsheet/actionsheet"
+    "mz-category-component":"plugin://mz-plugin/mz-category-component",
+    "mz-fcode-component":"plugin://mz-plugin/mz-fcode-component",
+    "mz-whitelist-component":"plugin://mz-plugin/mz-whitelist-component"
   },
   "navigationStyle": "custom",
   "navigationBarTitleText": "创建活动"

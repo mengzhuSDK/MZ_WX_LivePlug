@@ -1,70 +1,25 @@
-﻿
-# 目录说明
-## 目录结构
-├─component  历史聊天组件文件夹
-├─components  其他所有组件文件夹
-├─images 图片
-├─miniprogram_npm lottie插件
-├─pages  页面文件夹
-│  ├─image  语音动画的js
-│  ├─index  活动观看选择，直播入口
-│  ├─livecheckpermission  进入活动之前的观看权限检测界面(F码和白名单)
-│  ├─liveroom  活动页面，可以观看回放和直播
-│  ├─createactivity  创建直播活动页面
-│  ├─livepusher  竖屏 - 直播活动推流界面
-│  ├─landpush  横屏 - 直播活动推流界面
-│  └─logs  异常打印页面
-# 接口说明
+﻿# 接口说明
 
 ## 一、引用
 
-### 插件引用sdk文件
-> 1. 在app.json里加入以下代码
-```javascript
-  "plugins": {
-    "mz-plugin": {
-      "version": "2.0.0",
-      "provider": "wx2d4303f54f4d98ab"
-    }
-  }
-```
-> 2. 引用并使用sdk
-```javascript
-//引入SDK
-var mzplugin = requirePlugin('mz-plugin')
+> 直接使用require方式引用sdk文件。
 
-//初始化盟主SDK
-mzplugin.mzSDK.initSDK(data).then(function (res) {
-
-})
+```javascript
+var mzSDK = require("../../utils/mzlive.js");
 ```
 
 ## 二、接口说明
 名称|参数|参数说明|描述
 --|--|--|--
-initSDK|[Object]|```{permission:{ id: 授权编号, key: 授权密钥 }, isShowLog:"是否显示打印"}```|初始化盟主sdk
-initUser|[Object]|```{uniqueId:"用户唯一ID", name:"用户名字"，avatar:"用户头像"}```|初始化用户信息
-initUser|[Object]|```{unique_id:"用户唯一ID", name:"用户名字"，avatar:"用户头像"}```|更新用户信息
-getTicketInfo|[Object]|```{ticketId:"直播活动ID",uniqueId:"用户唯一ID"}```|获取直播间完整信息
+init|[Object]|```{ticketId:活动编号, uniqueId:"微信用户id", name:"微信名称", avatar:"用户微信头像", permission:{ id: 授权编号, key: 授权密钥 }}```|初始化直播sdk
 push|String|聊天内容|发送消息
 connect|-|-|sdk初始化完成后，调用此方法，连接到当前直播会话中，与其它用户互动。
-disconnect|-|-|断开连接，当用户退出时，调用此方法，结束直播会话。最好在页面的onload事件中调用
-getPraise|[Object]|```{ticketId:活动编号, channelId:"频道编号", praises:点赞数, chatUid:会话id }```|点赞接口channelId
-getGoods|[Object]|```{ticketId:活动编号, type:"商品类型", offset:页码, limit:每页数量}```|获取商品列表接口
-getHistory|[Object]|```{ticketId:活动编号, offset:页码, limit:每页数量, last_id:上一次请求的最后一条消息的id}```|获取历史信息接口
-getOnlines|[Object]|```{ticketId:活动编号}```|获取在线人员列表
-getHostInfo|[Object]|```{ticketId:活动编号}```|获取主播信息接口
-getWebinarToolsList|[Object]|```{ticketId:活动编号}```|获取活动的所有配置开关
-checkPlayPermission|[Object]|```{ticketId:活动编号, phone:手机号}```|检测当前活动的观看权限，白名单观看权限必须传phone，F码观看权限非必须
-useFCode|[Object]|```{ticketId:活动编号, fCode:F码}```|当前活动的观看权限未F码观看时，使用F码进行权限验证
-getLiveInfoOfChannel|[Object]|```{channelId:频道编号}```|获取当前频道是否有正在直播的活动
-createNewLive|[Object]|```{liveCover:"活动封面"，liveName:"活动名字"，liveIntroduction:"活动简介"，auto_record:"是否生成回放"，channelId:"频道编号"，live_style:"横屏还是竖屏，0-横屏，1-竖屏"，live_type:"语音还是视频直播，0-视频直播 1-语音直播"，view_mode:"观看方式 1-免费，5-白名单， 6-F码"，category_id:"分组ID"，pay_notice:"使用白名单观看权限的提示文案"，white_id:"使用白名单观看权限的白名单列表ID"，fcode_id:"使用F码观看权限的F码ID"}```|创建直播活动
-getCategoryList|[]|```{}```|获取分组列表，创建活动时需要，非必须
-getFCodeList|[]|```{}```|获取F码列表，创建活动时需要，非必须
-getWhiteList|[]|```{}```|获取白名单列表，创建活动时需要，非必须
-startLive|[Object]```{ticketId:"活动编号"，live_tk:"活动凭证"，uniqueId:"用户唯一ID"，name:"用户名字"，avatar:"用户头像"}```|获取推流地址，开始直播
-stopLive|[Object]|```{channelId:"频道编号"，ticketId:"活动编号"}```|结束直播，获取结束直播信息
-blockTicket|[Object]```{channelId:"频道编号"，ticketId:"活动编号",isChat:"是否禁言，0-禁言，1-解除禁言"}```|聊天室设置是否禁言
+disconnect|-|-|断开连接，当用户退出时，调用此方法，结束直播会话。最好在页面的onload事件中调用。
+getPraise|[Object]|```{ticketId:活动编号, channelId:"频道id", praises:点赞数, chatUid:会话id }```|点赞接口channelId|
+getGoods|[Object]|```{ticketId:活动编号, type:"商品类型", offset:页码, limit:每页数量,  permission:{ id: 授权编号, key: 授权密钥 }}```|获取商品列表接口
+getHistory|[Object]|```{ticketId:活动编号,  permission:{ id: 授权编号, key: 授权密钥 }}```|获取历史信息接口
+getAchorPost|[Object]|```{ticketId:活动编号}```|获取主播信息接口
+getOnlines|[Object]|`{ticketId:活动编号}`|获取右上角头像信息
 mzee|-|-|事件处理对象(见表2.1)
 
 ### 2.1 事件处理对象列表
@@ -93,6 +48,8 @@ goods_spread|推送的商品
 --|--
 *over|直播推流暂停
 *liveEnd|直播结束
+*disablechat|禁言接口
+*permitchat|解禁接口
 
 #### 2.1.3 channel监听频道消息
 
@@ -102,12 +59,33 @@ goods_spread|推送的商品
 --|--
 uv|直播观看人数
 
-## 三、使用示例
+## 三、相关配置
+### 3.1 appid和secret
+> 在<mark>liveroom.js</mark>中的<code>pageInfo</code>中配置。
+ ```javascript
+pageInfo: {
+	ticketId: "",
+	appId: " ",
+	secret: " ",
+}
+```
+### 3.2 用户信息存放
+> 用户信息存放于<mark>app.js</mark>中的<code>globalData</code>中，进入观看页面前，需要预先配置好相关配置信息
+```javascript
+globalData: {
+	userInfo: {
+		avatarUrl: '',  //存放全局登录用户头像地址
+		nickName: '',  //存放全局登录用户昵称
+		uniqueId: ''  //存放全局登录用户唯一标识
+	},  
+}
+```
+## 四、使用示例
 
-> 微信小程序插件使用
+> 在index.js中编写如下代码：
 
 ```javascript
-var mzplugin = requirePlugin('mz-plugin')
+var mzSDK = require("../../utils/mzlive.js");
 
 Page({
     data: {
@@ -119,20 +97,15 @@ Page({
     onLoad: function (option) {
         ...
         //绑定事件
-        mzplugin.mzSDK.mzee.on("msg", this.getMsg);
-
-        //实例化盟主SDK
-        mzplugin.mzSDK.initSDK(data).then(function (res) {
-
-        }, function (err) {
-
-        })
+        mzSDK.mzee.on("msg", this.getMsg);
+        ...
     },
     onUnload: function () {
         ...
         //卸载事件
-        mzplugin.mzSDK.mzee.removeListener("msg", this.getMsg);
+        mzSDK.mzee.removeListener("msg", this.getMsg);
         ...
     },
 })
 ```
+
