@@ -89,7 +89,7 @@ Page({
 			anchorFollow: "关注",
 			allGoods: "全部商品·",
 			toBuy: "去购买",
-			placeholderText: "跟主播聊点什么?",
+			placeholderText: "跟主播聊天",
 			quitLiveRoomAndFllow: "是否需要关注主播？",
 			quitLiveRoom: "退出",
 		},
@@ -208,8 +208,25 @@ Page({
 		isVoteShow: false,
 		//问答相关
 		refreshQAData: false,
-		unreadNum:0,
+		unreadNum: 0,
+		//签到相关
+		signInfoBean: null,
+		isPageShow: false,
+		is_sign: false, //是否签到
+		is_signbtn_show: true, // 签到按钮是否显示
+		delayobj: -1, //倒计时对象
 
+
+		//片头广告控制
+		video_advert: 0,
+		isADShow: false,
+
+		//盟主片头视频组件对象
+		mzADView: null,
+
+		//自定义礼物组件对象
+		mzGiftPop: null,
+		isGiftPopShow: false,
 	},
 
 	//事件处理函数
@@ -267,6 +284,10 @@ Page({
 		// 获取  video的播放句柄 和 直播的播放句柄
 		this.videoContext = wx.createVideoContext('myVideo')
 		this.playContext = wx.createLivePlayerContext('livePlayer')
+
+		this.mzGiftPop = this.selectComponent("#giftPop")
+
+		this.mzGiftPop.loadGiftData()
 	},
 
 	onUnload: function () {
@@ -471,7 +492,23 @@ Page({
 		} else if (res.data.type == "reward") {
 			console.log("观众给主播打赏");
 		} else if (res.data.type == "gift") {
-			console.log("观众给主播送礼物:", res.data);
+			console.log("观众给主播送礼物:", res);
+			var aMessage = {
+				text: res
+			}
+			_this.data.allCommentList.push(aMessage);
+			// 判断筛选条件里是否有这条消息的user_id
+			var isHasMe = _this.data.filterConditions.indexOf(res.user_id);
+			if (isHasMe >= 0) {
+				_this.data.filterCommentList.push(aMessage);
+			}
+			_this.setData({
+				commentList: _this.data.onlyHostIsEnable ? _this.data.filterCommentList : _this.data.allCommentList
+			}, () => {
+				_this.setData({
+					scrollTop: _this.data.commentList.length * 1000,
+				})
+			})
 		} else if (res.data.type == "prizeSign") {
 			console.log("抽奖活动用户签到完成通知");
 		} else if (res.data.type == "prizeWinner") {
@@ -538,6 +575,11 @@ Page({
 								break;
 							case "sign": //签到开关
 								_this.data.ticketConfig.isOpenSign = element.is_open;
+								if (!element.is_open) {
+									_this.setData({
+										is_signbtn_show: false
+									})
+								}
 								break;
 							case "documents": //文档开关，非实时的，所以这里没有处理，如果需要可以自行处理
 								_this.data.ticketConfig.isOpenDocuments = element.is_open;
@@ -580,10 +622,10 @@ Page({
 				urls.push(res.data.url)
 				_this.setData({
 					documentTitleName: res.data.file_name,
-					documentImgUrls:urls,
-					documentCurrentPage:1
-				} , () =>{
-					console.log('documentImgUrls' , _this.data.documentImgUrls)
+					documentImgUrls: urls,
+					documentCurrentPage: 1
+				}, () => {
+					console.log('documentImgUrls', _this.data.documentImgUrls)
 				})
 				break;
 			default:
@@ -760,6 +802,7 @@ Page({
 			limit: _this.data.comments.limit,
 		}
 		mzplugin.mzSDK.getHistory(data).then(function (res) {
+			console.log('历史消息', res)
 			console.log("过滤条件：", _this.data.filterConditions);
 			// 这里过滤只看主播的数据(_this.data.filterConditions，这里是需要过滤的用户id列表)
 			var filterMessage = res.filter(item => {
@@ -899,7 +942,9 @@ Page({
 							break;
 						case "sign":
 							console.log("配置是否显示签到，还需要处理签到的数据：", element.content);
-
+							_this.data.signInfoBean = element.content
+							_this.data.signInfoBean.access_url = _this.data.signInfoBean.access_url + '&source_mini=applet_plug'
+							console.log('_this.data.signInfoBean.access_url ======>' , _this.data.signInfoBean.access_url)
 							break;
 						case "prize":
 							console.log("配置是否显示抽奖，还需要处理抽奖的数据：", element.content);
@@ -944,7 +989,8 @@ Page({
 				videoUrl: videoURLString, //视频流地址，直播和断流是rtmp，回放是http
 				chatUid: res.chat_uid, //自己在聊天室里的uid
 				'ticketConfig.notice': cNotice, //消息公告
-				filterConditions: _this.data.filterConditions.concat(res.chat_uid)
+				filterConditions: _this.data.filterConditions.concat(res.chat_uid),
+				video_advert: res.video_advert, //是否开启片头广告
 			}, () => {
 				if (res.user_status == 3) { //3是禁言，2是被踢出
 					_this.setData({
@@ -955,15 +1001,24 @@ Page({
 				_this.getHistoryInfo();
 				if (_this.data.ticketConfig.isOpenDocuments == 1 && _this.data.liveState == '2') {
 					_this.getDocumentList();
-				}else if(_this.data.ticketConfig.isOpenDocuments == 1 && _this.data.liveState == '1'){
+				} else if (_this.data.ticketConfig.isOpenDocuments == 1 && _this.data.liveState == '1') {
 					_this.getDocumentInfo('')
 				}
 
 				if (_this.data.ticketConfig.isOpenFull_screen == false) { //如果不显示暖场图，那就直接开始播放
-					if (isLive) {
-						_this.playContext.play();
+					if (_this.initSign()) {
+
+					}
+					if (res.video_advert == 1) {
+						_this.setData({
+							isADShow: true
+						})
 					} else {
-						_this.videoContext.play();
+						if (isLive) {
+							_this.playContext.play();
+						} else {
+							_this.videoContext.play();
+						}
 					}
 				} else {
 					_this.setData({
@@ -979,6 +1034,93 @@ Page({
 			})
 			console.log("获取直播间详情错误: ", err);
 		})
+	},
+
+	//判断签到状态是否弹出签到提示框
+	initSign() {
+		var signInfoBean = this.data.signInfoBean
+		if (signInfoBean.is_sign == true) {
+			this.setData({
+				is_sign: true
+			})
+		}
+		if (signInfoBean.is_sign == false) {
+			this.setData({
+				is_sign: false
+			})
+		}
+		if (signInfoBean.is_force == 1 && // 是否强制签到 0:否 1:是'
+			signInfoBean.is_expired == 0 && //签到是否过期 0没过期 1过期
+			signInfoBean.redirect_sign == 1 && //是否是直接签到 0:否 1:是
+			signInfoBean.delay_time == 0 && //签到延迟分钟
+			!signInfoBean.is_sign && // 是否已签到 0:否 1:是
+			signInfoBean.status == 1) { // 签到场次状态 0:未开始 1:进行中 2:已结束'
+			this.setData({
+				signInfoBean: signInfoBean,
+				isPageShow: true
+			})
+			return true
+		} else if (signInfoBean.is_force == 1 && // 是否强制签到 0:否 1:是'
+			signInfoBean.is_expired == 0 && //签到是否过期 0没过期 1过期
+			signInfoBean.redirect_sign == 1 && //是否是直接签到 0:否 1:是
+			signInfoBean.delay_time > 0 && //签到延迟分钟
+			!signInfoBean.is_sign && // 是否已签到 0:否 1:是
+			signInfoBean.status == 1) { // 签到场次状态 0:未开始 1:进行中 2:已结束'
+			this.delaySign()
+			return true
+		} else {
+			return false
+		}
+	},
+
+	//延迟弹出签到
+	delaySign() {
+		var that = this
+		var signInfoBean = this.data.signInfoBean
+		this.data.delayobj == setTimeout(() => {
+			that.setData({
+				signInfoBean: signInfoBean,
+				isPageShow: true
+			})
+		}, this.data.signInfoBean.delay_time * 60000);
+		console.log('this.data.delayobj1' , this.data.delayobj)
+	},
+
+	//签到按钮点击事件
+	signClick() {
+		var signInfoBean = this.data.signInfoBean
+		if (signInfoBean.is_expired == 1) {
+			wx.showToast({
+				title: '签到过期无法签到', //提示的内容,
+				icon: 'none', //图标,
+			});
+		} else {
+			if (!signInfoBean.is_sign) {
+				if (signInfoBean.status == 1) {
+					console.log('this.data.delayobj' , this.data.delayobj)
+					clearTimeout(this.data.delayobj)
+					this.setData({
+						signInfoBean: signInfoBean,
+						isPageShow: true
+					})
+				} else if (signInfoBean.status == 0) {
+					wx.showToast({
+						title: '签到活动未开始', //提示的内容,
+						icon: 'none', //图标,
+					});
+				} else {
+					wx.showToast({
+						title: '签到活动已结束', //提示的内容,
+						icon: 'none', //图标,
+					});
+				}
+			} else {
+				this.setData({
+					signInfoBean: signInfoBean,
+					isPageShow: true
+				})
+			}
+		}
 	},
 
 	fixPopular: function (popular) {
@@ -1640,7 +1782,7 @@ Page({
 			menuDocumentColor: "#7A7A7A",
 			menuDiscussColor: "#FF1F60",
 			menuShowIndex: 2
-		} , () =>{
+		}, () => {
 			//切换到问答主动刷新数据
 			that.setData({
 				refreshQAData: true
@@ -1672,13 +1814,75 @@ Page({
 	// 暖场图结束了，处理播放事宜
 	advertFullScreenOverToPlay: function () {
 		var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
-		if (isLive) {
-			this.playContext.play();
+		if (this.initSign()) {
+
+		}
+		if (this.data.video_advert == 1) {
+			this.setData({
+				isADShow: true
+			})
 		} else {
-			this.videoContext.play();
+			if (isLive) {
+				this.playContext.play();
+			} else {
+				this.videoContext.play();
+			}
 		}
 		this.setData({
 			isShowFullScreenComponent: false
+		})
+	},
+
+	//片头视频倒计时结束回调事件
+	bindADPlayEnd() {
+		this.setData({
+			isADShow: false
+		}, () => {
+			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
+			if (isLive) {
+				this.playContext.play();
+			} else {
+				this.videoContext.play();
+			}
+		})
+	},
+
+	//片头视频跳过按钮点击回调事件
+	bindskipClick() {
+		const mzADView = this.selectComponent("#mz-ad-view")
+		mzADView.mzADPause()
+		this.setData({
+			isADShow: false
+		}, () => {
+			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
+			if (isLive) {
+				this.playContext.play();
+			} else {
+				this.videoContext.play();
+			}
+		})
+	},
+
+	//片头视频点击回调事件
+	bindADClick() {
+		const mzADView = this.selectComponent("#mz-ad-view")
+		mzADView.mzADPause()
+		this.setData({
+			isADShow: false
+		}, () => {
+			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
+			if (isLive) {
+				this.playContext.play();
+			} else {
+				this.videoContext.play();
+			}
+		})
+	},
+
+	//礼物按钮点击事件
+	giftClick() {
+		this.setData({
+			isGiftPopShow: true
 		})
 	},
 
@@ -1715,7 +1919,7 @@ Page({
 				}, () => {
 					console.log('documentTitleName  ', that.data.documentTitleName)
 				})
-			}else if (that.data.liveState == "1"){
+			} else if (that.data.liveState == "1") {
 				urls.push(res.access_url + res.current_page + '.png' + res.scale)
 				that.setData({
 					documentImgUrls: urls,
@@ -1746,7 +1950,7 @@ Page({
 	 * 文档滑动切换事件
 	 * @param {*} e 
 	 */
-	documentPageChange: function(e){
+	documentPageChange: function (e) {
 		this.setData({
 			documentCurrentPage: e.detail.current + 1
 		})
@@ -1780,5 +1984,38 @@ Page({
 			console.log(that.data.isVoteShow)
 		})
 	},
+
+	bindWebMessage(message) { //收到消息证明签到成功
+		console.log('message =====>', message)
+		var data = []
+		data = message.detail.data
+		if (data.length > 0 && data[0] == 'successSign') {
+			this.setData({
+				is_sign: true
+			})
+		}
+		console.log('is_sign' , this.data.is_sign)
+	},
+
+	//签到页面离开前触发
+	pageBeforeLeave() {
+		console.log('hhhhhhhhhh')
+		this.setData({
+			isPageShow: false
+		})
+	},
+
+	pageAfterLeave() {
+		//force_type 1填写后可观看 2可跳过
+		console.log('哈哈哈哈哈')
+		var that = this
+		setTimeout(() => {
+			if (that.data.signInfoBean.force_type == 1 && !that.data.is_sign) {
+				wx.navigateBack({
+					delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+				});
+			}
+		}, 1000);
+	}
 
 })

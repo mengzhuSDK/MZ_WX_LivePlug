@@ -6,7 +6,7 @@ Page({
   data: {
 
     ticketId: "",
-    ticketIdDefault: "10181510",
+    ticketIdDefault: "",
     userInfo: {
       avatarUrl: '',
       nickName: '',

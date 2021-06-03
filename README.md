@@ -35,7 +35,7 @@
 商品列表、循环播放推荐商品、
 
 * 营销功能
-文档、问答、投票、滚动广告、开屏暖场图
+文档、问答、投票、滚动广告、开屏暖场图、签到、自定义礼物、片头视频
 
 ```
 # 接口说明
@@ -99,6 +99,9 @@ getAQList(ticket_id , is_new_reply , offset , limit)|[Object]|ticket_id 活动id
 postQuestion(ticket_id , content , is_anonymous)|-|ticket_id 活动id<br>content 提问内容<br>is_anonymous 	是否匿名提问 0:否 1:是|提交问答
 getAdvertScreen({ticketId})|{Object}|```{ticketId:活动编号}```|获取暖场图
 getAdvertRolling({ticketId})|[Object]|```{ticketId:活动编号}```|获取活动的滚动广告
+getADInfo(ticket_id)|{Object}|```{ticketId:活动编号}```|获取配置的片头视频信息
+getGiftList(ticket_id , offset, limit)|[Object]|ticket_id 活动id<br/>offset 分页<br/>limit 条数|获取自定义礼物列表
+pushGift(ticket_id , gift_id, quantity)|-|ticket_id 活动id<br/>gift_id 礼物id<br/>quantity 个数|发送礼物
 
 ### 2.1 事件处理对象列表
 事件名称|接收参数|描述
@@ -318,6 +321,91 @@ Page({
 | :--------- | ------- | ------ | ---- | ------------------------------------------------------------ |
 | ticketId   | String  |        | 是   | 活动编号                                                     |
 | isOnlySlot | Boolean | false  | 否   | 是否启用自定义slot，如果启用，就会放弃本组件的所有内容，完全自定义显示的内容 |
+### 6、片头视频组件
+#### *引入组件
+``` javascript
+"usingComponents": {
+    "mz-ad-component":"plugin://mz-plugin/mz-advideo-component"
+  }
+```
+#### *示例代码
+``` wxml
+<!-- wxml代码 -->
+<!-- 片头视频组件 -->
+<mz-ad-component
+ id="mz-ad-view"
+ isADShow="{{isADShow}}"
+ liveStyle="{{live_style}}"
+ adWidth="100vw"
+ top="{{playerViewTop}}"
+ countDownTime='5'
+ zIndex='90'
+ adHeight="{{live_style==0?'56.00vw':'97vh'}}"
+ ticket_id="{{pageInfo.ticketId}}"
+ bindADPlayEnd="bindADPlayEnd"
+ bindskipClick="bindskipClick"
+ bindADClick="bindADClick"
+></mz-ad-component>
+```
+#### *组件属性列表
+
+| 属性          | 类型         | 默认值 | 必填 | 说明                                        |
+| :------------ | ------------ | ------ | ---- | ------------------------------------------- |
+| isADShow      | Boolean      | false  | 是   | 片头视频是否展示                            |
+| adWidth       | String       | 100%   | 否   | 组件宽度                                    |
+| adHeight      | String       | 100%   | 否   | 组件高度                                    |
+| top           | String       |        | 否   | 组件距上距离top值                           |
+| zIndex        | Number       |        | 否   | 组件层级设置                                |
+| liveStyle     | String       | 0      | 否   | 0位横屏直播间，1位竖屏直播间                |
+| ticket_id     | String       |        | 是   | 活动编号                                    |
+| countDownTime | Number       |        | 否   | 自定义倒计时时间，不设置则取视频时长，单位S |
+| bindADPlayEnd | eventhandler |        |      | 倒计时结束事件                              |
+| bindskipClick | eventhandler |        |      | 跳过按钮点击事件                            |
+| bindADClick   | eventhandler |        |      | 片头视频点击事件                            |
+| skipViewClass | class        |        |      | 跳过按钮的样式可以自定义                    |
+#### *API示例代码
+``` javaScript
+<!-- js示例代码 -->
+const mzADView = this.selectComponent("#mz-ad-view")
+//暂停片头视频
+mzADView.mzADPause()
+//继续播放片头视频
+mzADView.mzADResume()
+```
+#### *注意事项
+
+<font color='red'> **playInfo数据中的video_advert == 1的时候，代表设置了片头视频**</font>
+
+### 7、自定义礼物组件
+#### *引入组件
+``` javaScript
+"usingComponents": {
+       "custom-gift-pop": "../../components/customGift/customGiftPop"
+     }
+```
+##### 源码提供，可查看demo中components/customGift/customGiftPop目录下的代码，自定义修改
+
+### 8、签到
+#### *示例代码
+``` wxml
+<!-- wxml代码 -->
+<!-- 签到 -->
+<page-container
+ show="{{isPageShow}}"
+ position="{{'center'}}"
+ bind:beforeleave="pageBeforeLeave"
+ bind:afterleave="pageAfterLeave"
+>
+	<web-view
+	 src="{{signInfoBean.access_url}}"
+	 wx:if="{{isPageShow}}"
+	 bindmessage="bindWebMessage"
+	/>
+</page-container>
+```
+#### 说明以及注意事项
+<font color='red'> **由于webview组件在插件中使用的限制，无法封装到插件内部，又由于webview与小程序交互限制采用page-container组件来装载签到H5页面，利用page-container接收页面返回事件来完成H5页面的数据交互，完成签到完成通知，注意page-container需使用基础库版本为2.1.6，也可以自行使用page页面来实现，具体代码实现逻辑请查看liveroom.js文件查看。**</font>
+
 ## 五、版本更新
 
 > 盟主直播插件版本更新
@@ -340,4 +428,10 @@ Page({
 - 添加滚动广告功能组件。
 - 添加开屏暖场图功能组件
 - 添加聊天列表只显示主播功能。
+```
+```javascript
+2.2.0 更新内容
+- 片头视频组件。
+- 自定义礼物源码组件。
+- 签到功能添加。
 ```

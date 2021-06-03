@@ -1,29 +1,49 @@
 <template name="comments">
-  <!-- 评论区   -->
+	<!-- 评论区   -->
 
-    <scroll-view class="comment-info" scroll-y='{{true}}' scroll-top='{{scrollTop}}' style="bottom:{{bottomValue}};top:{{topValue}}" bindscrolltoupper="commentsLoadOld" bindscroll="commentsScroll">
-      <view class="comment-items">
-        <view index="{{index}}" class="comment-item" wx:for="{{commentList}}" wx:key="index">
-          <view wx:if="{{item.text.user_name}}">
-            <view class="comment-item-icon">
-              <image class="comment-image" mode="aspectFill" src="{{item.text.avatar}}"></image>
-            </view>
-            <view class="comment-item-info">
-              <view class="comment-item-username">
-                {{item.text.user_name}}：
-              </view>
-              <view class="comment-item-contact">
-                {{item.text.data.text}}
-              </view>
-            </view>
-          </view>
-          <view wx:else>
-            <view class="vio-tips" wx:if="{{item.type=='vioTips'}}">
-              {{item.info}}
-            </view>
-          </view>
-          
-        </view>
-      </view>
-    </scroll-view>
+	<scroll-view
+	 class="comment-info"
+	 scroll-y='{{true}}'
+	 scroll-top='{{scrollTop}}'
+	 style="bottom:{{bottomValue}};top:{{topValue}}"
+	 bindscrolltoupper="commentsLoadOld"
+	 bindscroll="commentsScroll"
+	>
+		<view class="comment-items">
+			<view
+			 index="{{index}}"
+			 class="comment-item"
+			 wx:for="{{commentList}}"
+			 wx:key="index"
+			>
+				<view wx:if="{{item.text.user_name}}">
+					<view class="comment-item-icon">
+						<image
+						 class="comment-image"
+						 mode="aspectFill"
+						 src="{{item.text.avatar}}"
+						></image>
+					</view>
+					<view class="comment-item-info">
+						<view class="comment-item-username">
+							{{item.text.user_name}}：
+						</view>
+						<view wx:if="{{item.text.data.type == 'gift'}}" class="comment-item-contact">
+							送给主播礼物{{item.text.data.name}}
+						</view>
+						<view wx:else class="comment-item-contact">
+							{{item.text.data.text}}
+						</view>
+					</view>
+				</view>
+				<view wx:else>
+					<view class="vio-tips" wx:if="{{item.type=='vioTips'}}">
+						{{item.info}}
+					</view>
+				</view>
+
+			</view>
+		</view>
+	</scroll-view>
 </template>
+

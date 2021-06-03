@@ -10,10 +10,12 @@
     "quit-page-popup": "../../components/quitPagePopup/quitPagePopup",
     "over-live-state": "../../components/overLiveState/overLiveState",
     "end-live-state": "../../components/endLiveState/endLiveState",
+    "custom-gift-pop": "../../components/customGift/customGiftPop",
     "mz-vote-component":"plugin://mz-plugin/mz-vote-component",
     "mz-advertRolling-component":"plugin://mz-plugin/mz-advertRolling-component",
     "mz-advertFullScreen-component":"plugin://mz-plugin/mz-advertFullScreen-component",
-    "mz-qa-component":"plugin://mz-plugin/mz-qa-component"
+    "mz-qa-component":"plugin://mz-plugin/mz-qa-component",
+    "mz-ad-component":"plugin://mz-plugin/mz-advideo-component"
   },
   "enablePullDownRefresh": false,
   "disableScroll":true

@@ -175,6 +175,7 @@
 	 hiddenSelf="{{live_style==0?false:controlIsHidden}}"
 	 defaultInfo="{{defaultInfo}}"
 	 chatUid="{{chatUid}}"
+	 bindgiftClick="giftClick"
 	></setting-info>
 
 	<!-- 聊天输入框 -->
@@ -276,11 +277,14 @@
 	 uv="{{uv}}"
 	></end-live-state>
 
-	<view
-	 wx:if="{{live_style==0}}"
-	 class="rightButtonList"
-	 style="top:{{isHiddenAdvertRolling == true ? '94vw' : 'calc(94vw + 160rpx)'}};"
-	>
+	<view class="rightButtonList" style="top:{{isHiddenAdvertRolling == true ? '94vw' : 'calc(94vw + 160rpx)'}};">
+
+		<image
+		 class="rightButton"
+		 src="{{is_sign?'../../images/icon_signed.png':'../../images/icon_sign.png'}}"
+		 bind:tap="signClick"
+		 wx:if="{{is_signbtn_show}}"
+		/>
 		<image
 		 hidden="{{ticketConfig.isOpenVote == 0}}"
 		 class="rightButton"
@@ -328,4 +332,38 @@
  mzVoteViewHeignt='996rpx'
  ticketId="{{pageInfo.ticketId}}"
 ></mz-vote-component>
+
+<!-- 签到 -->
+<page-container
+ show="{{isPageShow}}"
+ position="{{'center'}}"
+ bind:beforeleave="pageBeforeLeave"
+ bind:afterleave="pageAfterLeave"
+>
+	<web-view
+	 src="{{signInfoBean.access_url}}"
+	 wx:if="{{isPageShow}}"
+	 bindmessage="bindWebMessage"
+	/>
+</page-container>
+<!-- 片头视频组件 -->
+<mz-ad-component
+ id="mz-ad-view"
+ isADShow="{{isADShow}}"
+ liveStyle="{{live_style}}"
+ adWidth="100vw"
+ top="{{playerViewTop}}"
+ zIndex='90'
+ adHeight="{{live_style==0?'56.00vw':'97vh'}}"
+ ticket_id="{{pageInfo.ticketId}}"
+ bindADPlayEnd="bindADPlayEnd"
+ bindskipClick="bindskipClick"
+ bindADClick="bindADClick"
+></mz-ad-component>
+
+<custom-gift-pop
+ id="giftPop"
+ ticketId="{{pageInfo.ticketId}}"
+ isShow="{{isGiftPopShow}}"
+></custom-gift-pop>
 

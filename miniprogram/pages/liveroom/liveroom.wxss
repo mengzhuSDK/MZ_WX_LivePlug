@@ -226,7 +226,7 @@ page{
 	/* background-color: #FF174B; */
 }
 .user-addcomment{
-	width: 32vw;
+	width: 18vw;
 	height: 11.73vw;
 	position: fixed;
 	bottom: 3.2vw;
@@ -240,7 +240,7 @@ page{
 	height: 11.73vw;
 	line-height: 11.73vw;
 	color:rgba(255,255,255,0.6);
-	font-size: 3.73vw
+	font-size: 24rpx
   }
   
   .user-addcomment .input-placeholder{
@@ -1041,4 +1041,25 @@ page{
 .iphoneXBottom{
     padding-bottom: constant(safe-area-inset-bottom); /*兼容 IOS<11.2*/
     padding-bottom: env(safe-area-inset-bottom); /*兼容 IOS>11.2*/
+}
+
+
+.skipViewClass{
+    position: absolute;
+    top: 44rpx;
+    right: 44rpx;
+    width: auto;
+    height: 54rpx;
+    padding-left: 20rpx;
+    padding-right: 20rpx;
+    background: rgba(0,0,0,0.7);
+    border-radius: 8rpx;
+    font-size: 27rpx;
+    color: #FF174B;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    text-align: center;  
 }

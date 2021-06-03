@@ -22,6 +22,12 @@
 .setting-info .set-image {
 	width: 11.73vw;
 	height: 11.73vw;
+	right: 45.19vw
+}
+
+.setting-info .gift-image {
+	width: 11.73vw;
+	height: 11.73vw;
 	right: 30.06vw
 }
 

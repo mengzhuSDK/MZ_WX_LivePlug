@@ -76,6 +76,10 @@ Component({
     },
     reportInfo: function(){
       console.log("点击了举报");
+    },
+
+    giftClick: function(){
+      this.triggerEvent('giftClick', {}, {})
     }
   }
 })

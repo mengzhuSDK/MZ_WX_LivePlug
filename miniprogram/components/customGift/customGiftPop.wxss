@@ -1,0 +1,167 @@
+.popView{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: transparent;
+    top: 0rpx;
+    display: flex;
+    flex-direction: column;
+}
+.popBg{
+    flex: 1;
+}
+.popBottomView{
+    bottom: 0rpx;
+    width: 100%;
+    height: 596rpx;
+    display: flex;
+    background: rgba(74, 74, 74, 1);
+    opacity: 0.95;
+    flex-direction: column;
+}
+.popTitleView{
+    position: relative;
+    height: 84rpx;
+}
+.pop_title_bg{
+    width: 192rpx;
+    height: 84rpx;
+    position: absolute;
+}
+.gift_title_icon{
+    width: 48rpx;
+    height: 48rpx;
+    position: absolute;
+    left: 28rpx;
+    top: 18rpx;
+}
+.gift_text_str{
+    left: 76rpx;
+    top: 18rpx;
+    position: absolute;
+    font-size: 32rpx;
+    color: white;
+}
+.popContentView{
+    height: 596rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.swiperClass{
+    width: 100%;
+    height: 472rpx;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap !important;
+    overflow-x: hidden;
+}
+
+.itemClass{
+    flex: 0 0 auto !important;
+    width: 25% !important;
+    text-align: center !important;
+    height: 236rpx !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.itemClassSelect{
+    flex: 0 0 auto !important;
+    width: calc(25% - 4rpx) !important;
+    text-align: center !important;
+    background: #000000 !important;
+    border-radius: 20rpx !important;
+    border: 2rpx solid #FF1B56 !important;
+    height: 232rpx !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.giftImg{
+    margin-top: 28rpx;
+    width: 136rpx;
+    height: 92rpx;
+}
+
+.giftName{
+    width: 136rpx;
+    margin-top: 16rpx;
+    font-size: 28rpx;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.giftAmount{
+    font-size: 20rpx;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.indicatorView{
+    width: 100%;
+    height: 36rpx;
+    text-align: center;
+}
+
+.indicatorList{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.indicatorClass{
+    margin-top: 8rpx;
+    margin-left: 10rpx;
+    margin-right: 10rpx;
+    width: 12rpx;
+    height: 12rpx;
+    border-radius: 50%;
+    background: #EAEAEA;
+}
+
+.indicatorClassSelect{
+    margin-top: 8rpx;
+    margin-left: 10rpx;
+    margin-right: 10rpx;
+    width: 12rpx;
+    height: 12rpx;
+    border-radius: 50%;
+    background: #FF1B56;
+}
+
+.sendView{
+    width: 100%;
+    height: 84rpx;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.sendBtn{
+    width: 128rpx;
+    height: 60rpx;
+    background: #FF1B56;
+    border-radius: 8rpx;
+    font-size: 24rpx;
+    line-height: 60rpx;
+    text-align: center;
+    color: #fff;
+    margin-right: 32rpx;
+}
+
+.iphoneXBottom{
+    padding-bottom: constant(safe-area-inset-bottom); /*兼容 IOS<11.2*/
+    padding-bottom: env(safe-area-inset-bottom); /*兼容 IOS>11.2*/
+}
