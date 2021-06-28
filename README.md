@@ -47,7 +47,7 @@
 ```javascript
   "plugins": {
     "mz-plugin": {
-      "version": "2.1.0",
+      "version": "2.2.0",
       "provider": "wx2d4303f54f4d98ab"
     }
   }
