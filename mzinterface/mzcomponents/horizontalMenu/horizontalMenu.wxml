@@ -1,0 +1,5 @@
+<view index="{{index}}" wx:for="{{menuTitles}}" wx:key="index">
+  <view data-index="{{index}}" class="menu-title" style="color:{{showIndex == index ? color_select : color_normal}}"
+    bindtap="menuTitleClick">{{item}}
+  </view>
+</view>

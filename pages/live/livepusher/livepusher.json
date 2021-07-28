@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "quit-page": "../../../mzinterface/mzcomponents/quitPage/quitPage",
+    "user-head-icon": "../../../mzinterface/mzcomponents/userHeadIcon/userHeadIcon"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll":true
+}

@@ -1,19 +1,20 @@
 # 目录说明
 ## 目录结构
 ```
-├─component  历史聊天组件文件夹
-├─components  其他所有组件文件夹
-├─images 图片
-├─miniprogram_npm lottie插件
+├─mzinterface  盟主模版的所有图片、组件、句柄文件
+│  ├─mzcomponents  盟主模版内所有的组件
+│  ├─mzimage  盟主模版内所有的图片
+│  ├─utils  盟主SDK的句柄
 ├─pages  页面文件夹
-│  ├─image  语音动画的js
-│  ├─index  活动观看选择，直播入口
-│  ├─livecheckpermission  进入活动之前的观看权限检测界面(F码和白名单)
-│  ├─liveroom  活动页面，可以观看回放和直播
-│  ├─createactivity  创建直播活动页面
-│  ├─livepusher  竖屏 - 直播活动推流界面
-│  ├─landpush  横屏 - 直播活动推流界面
-│  └─logs  异常打印页面
+│  ├─index  拉流/推流入口 配置SDK信息，SDK初始化
+│  ├─player  播放相关
+│  │  ├─playinput  输入活动和用户信息/选择二分屏或竖屏播放入口
+│  │  ├─livecheckpermission  进入活动之前的观看权限检测界面(F码和白名单)
+│  │  ├─liveroom  活动页面，可以观看回放和直播
+│  ├─live  推流相关
+│  │  ├─createactivity  创建直播活动页面
+│  │  ├─livepusher  竖屏 - 直播活动推流界面
+│  │  ├─landpush  横屏 - 直播活动推流界面
 ```
 
 ## 支持的功能
@@ -38,6 +39,21 @@
 文档、问答、投票、滚动广告、开屏暖场图、签到、自定义礼物、片头视频
 
 ```
+
+# 快速接入详细步骤
+```
+  1. 将mzinterface、live、player文件夹拷贝到工程内，mzinterface跟pages同级，live和player在pages的根目录。
+  2. 参照demo里的app.json，app.js文件，设置下这2个文件。
+  3. index.js是引入SDK，设置SDK信息，初始化SDK。可将相关代码拷贝到项目入口文件里。
+  4. 语音动画插件
+    - 如果不需要语音直播功能，直接搜索关键词lottie，将相关代码注释即可，至此就可以运行项目了。
+    - 添加语音动画插件的步骤：
+      1. 执行 npm init 命令。
+      2. 执行 npm install lottie-miniprogram --save 命令。
+      3. 右上角 详情 - 本地设置， 选中 使用npm。
+      4. 菜单栏 - 工具 - 构建npm。
+```
+
 # 接口说明
 
 ## 一、引用
@@ -58,8 +74,9 @@
 var mzplugin = requirePlugin('mz-plugin')
 
 //初始化盟主SDK
+//index.js文件里配置 appId 和 secret，然后初始化SDK，一切操作请在SDK初始化之后
 mzplugin.mzSDK.initSDK(data).then(function (res) {
-
+      console.log("实例化盟主SDK的结果：",res);
 })
 ```
 
@@ -68,7 +85,7 @@ mzplugin.mzSDK.initSDK(data).then(function (res) {
 --|--|--|--
 initSDK|[Object]|```{permission:{ id: 授权编号, key: 授权密钥 }, isShowLog:"是否显示打印"}```|初始化盟主sdk
 initUser|[Object]|```{uniqueId:"用户唯一ID", name:"用户名字"，avatar:"用户头像"}```|初始化用户信息
-initUser|[Object]|```{unique_id:"用户唯一ID", name:"用户名字"，avatar:"用户头像"}```|更新用户信息
+toUpdateUserInfo|[Object]|```{unique_id:"用户唯一ID", name:"用户名字"，avatar:"用户头像"}```|更新用户信息
 getTicketInfo|[Object]|```{ticketId:"直播活动ID",uniqueId:"用户唯一ID"}```|获取直播间完整信息
 push|String|聊天内容|发送消息
 connect|-|-|sdk初始化完成后，调用此方法，连接到当前直播会话中，与其它用户互动。
@@ -409,7 +426,6 @@ mzADView.mzADResume()
 ## 五、版本更新
 
 > 盟主直播插件版本更新
-
 ```javascript
 2.0.0 更新内容
 - 添加推流功能（支持横屏推流/竖屏推流/语音推流）。

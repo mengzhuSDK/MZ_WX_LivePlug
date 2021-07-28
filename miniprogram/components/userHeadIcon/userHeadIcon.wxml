@@ -1,3 +1,0 @@
-<view class="audience-info" style="top:{{menuButton.top+3+'px'}}">
-    <image class="audienceitem-info" index="{{index}}" wx:for="{{iconList}}" src="{{item}}"  wx:key="index"></image>
-</view>

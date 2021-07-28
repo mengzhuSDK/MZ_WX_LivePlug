@@ -1,0 +1,38 @@
+/* pages/index/index.wxss */
+page {
+    background: black;
+}
+
+.test-page {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.test-page .icon-background {
+    flex: 1;
+}
+
+.test-page .icon-background .icon {
+    margin-top: 288rpx;
+    width: 200rpx;
+    height: 276rpx;
+}
+
+.test-page .player-btn {
+    margin-bottom: 66rpx;
+}
+
+.test-page .pusher-btn {
+    margin-bottom: 320rpx;
+}
+
+.test-page .btn-normal {
+    color: white;
+    border-radius: 66rpx;
+    width: 75vw;
+    background: rgba(255, 31, 96, 1);
+}
+

@@ -1,0 +1,8 @@
+<!--pages/index/index.wxml-->
+<view class="test-page">
+   <button class="pusher-btn btn-normal" bindtap="toLivePuhser">推流测试</button>
+   <button class="player-btn btn-normal" bindtap="toPlayerInput">直播/回放</button>
+   <view class="icon-background">
+      <image class="icon" src="../../mzinterface/mzimage/mz_home_logo.png"></image>
+   </view>
+</view>

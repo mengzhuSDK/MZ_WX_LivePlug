@@ -1,0 +1,5 @@
+.rightButton{
+	margin-top: 24rpx;
+	width: 88rpx;
+	height: 88rpx;
+}

@@ -1,0 +1,7 @@
+<view>
+	<image class="rightButton"
+		src="{{is_sign?'../../../mzinterface/mzimage/icon_signed.png':'../../../mzinterface/mzimage/icon_sign.png'}}"
+		bind:tap="signClick" wx:if="{{is_signbtn_show}}" />
+	<image hidden="{{ticketConfig.isOpenVote == 0}}" class="rightButton" src="../../../mzinterface/mzimage/icon_vote.png"
+		bind:tap="voteClick" />
+</view>

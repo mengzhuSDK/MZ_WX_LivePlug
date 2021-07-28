@@ -1,0 +1,36 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/player/playinput/playinput",
+    "pages/player/livecheckpermission/livecheckpermission",
+    "pages/player/liveroom/liveroom",
+    "pages/live/createactivity/createactivity",
+    "pages/live/livepusher/livepusher",
+    "pages/live/landpush/livepusher"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarTextStyle":"black",
+    "navigationStyle": "custom",
+    "renderingMode": "mixed"
+  },
+  "plugins": {
+    "mz-plugin": {
+      "version": "2.2.0",
+      "provider": "wx2d4303f54f4d98ab"
+    }
+  },
+  "useExtendedLib": {
+    "weui": true
+  },
+  "usingComponents": {
+    "mp-navigation-bar": "weui-miniprogram/navigation-bar/navigation-bar",
+    "mp-dialog": "weui-miniprogram/dialog/dialog",
+    "mp-actionSheet": "weui-miniprogram/actionsheet/actionsheet"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,24 @@
+{
+  "usingComponents": {
+    "like-fx": "../../../mzinterface/mzcomponents/likeFx/likeFx",
+    "anchor-info": "../../../mzinterface/mzcomponents/anchorInfo/anchorInfo",
+    "quit-page": "../../../mzinterface/mzcomponents/quitPage/quitPage",
+    "setting-info": "../../../mzinterface/mzcomponents/settingInfo/settingInfo",
+    "goods-info": "../../../mzinterface/mzcomponents/goodsInfo/goodsInfo",
+    "goods-info-popup": "../../../mzinterface/mzcomponents/goodsInfoPopup/goodsInfoPopup",
+    "user-head-icon": "../../../mzinterface/mzcomponents/userHeadIcon/userHeadIcon",
+    "quit-page-popup": "../../../mzinterface/mzcomponents/quitPagePopup/quitPagePopup",
+    "over-live-state": "../../../mzinterface/mzcomponents/overLiveState/overLiveState",
+    "end-live-state": "../../../mzinterface/mzcomponents/endLiveState/endLiveState",
+    "custom-gift-pop": "../../../mzinterface/mzcomponents/customGift/customGiftPop",
+    "horizontal-menu": "../../../mzinterface/mzcomponents/horizontalMenu/horizontalMenu",
+
+    "mz-vote-component":"plugin://mz-plugin/mz-vote-component",
+    "mz-advertRolling-component":"plugin://mz-plugin/mz-advertRolling-component",
+    "mz-advertFullScreen-component":"plugin://mz-plugin/mz-advertFullScreen-component",
+    "mz-qa-component":"plugin://mz-plugin/mz-qa-component",
+    "mz-ad-component":"plugin://mz-plugin/mz-advideo-component"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll":true
+}

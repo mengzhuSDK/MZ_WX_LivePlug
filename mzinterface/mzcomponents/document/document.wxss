@@ -1,0 +1,130 @@
+.document-bg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.documentTitle {
+  display: flex;
+  width: 100%;
+  height: 88rpx;
+  flex-direction: row;
+  align-items: center;
+}
+
+.documentTitleImg {
+  width: 48rpx;
+  height: 48rpx;
+  margin-left: 32rpx;
+  margin-right: 12rpx;
+}
+
+.oneLineText {
+  /*超出部分隐藏*/
+  overflow: hidden;
+  /*不换行*/
+  white-space: nowrap;
+  /*添加...*/
+  text-overflow: ellipsis;
+}
+
+.documentTitleText {
+  line-height: 88rpx;
+  font-size: 28rpx;
+  color: white;
+  width: 626rpx;
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+}
+
+.documentInfo {
+  flex: 1;
+  position: relative;
+  width: 100%;
+}
+
+.documentInfoSwiper {
+  position: absolute;
+  margin-left: 6vw;
+  width: 88vw;
+  height: 100%;
+}
+
+.swiper-image {
+  width: 88vw;
+  height: 100%;
+}
+
+.documentPages {
+  position: absolute;
+  display: flex;
+  width: 400rpx;
+  height: 60rpx;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0px 8px 8px;
+  font-size: 24rpx;
+  color: white;
+  line-height: 60rpx;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  justify-content: center;
+}
+
+.documentEnlarge {
+  position: absolute;
+  width: 88rpx;
+  height: 88rpx;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  bottom: 20rpx;
+}
+
+.documentRight {
+  position: absolute;
+  width: 60rpx;
+  height: 80rpx;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8rpx 0px 0px 8rpx;
+}
+
+.arrow {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.documentLeft {
+  position: absolute;
+  width: 60rpx;
+  height: 80rpx;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px 8rpx 8rpx 0px;
+}
+
+.documentInfoNoData {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  display: flex;
+  font-size: 30rpx;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}

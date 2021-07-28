@@ -1,22 +1,14 @@
 {
-  "name": "wx_live_sdk",
+  "name": "mz_wx_liveplug",
   "version": "1.0.0",
-  "main": "index.js",
-  "directories": {
-    "doc": "doc"
-  },
-  "dependencies": {
-    "lottie-miniprogram": "^1.0.11"
-  },
-  "devDependencies": {},
+  "description": "",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@gitsrv.zmengzhu.cn:wx/WX_LIVE_SDK.git"
-  },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "lottie-miniprogram": "^1.0.11"
+  }
 }

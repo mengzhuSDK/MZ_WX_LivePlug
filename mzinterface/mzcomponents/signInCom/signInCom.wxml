@@ -1,0 +1,4 @@
+<page-container show="{{isPageShow}}" position="{{'center'}}" bind:beforeleave="pageBeforeLeave"
+	bind:afterleave="pageAfterLeave">
+	<web-view src="{{signInfoBean.access_url}}" wx:if="{{isPageShow}}" bindmessage="bindWebMessage" />
+</page-container>

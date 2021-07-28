@@ -1,0 +1,10 @@
+<view hidden="{{!showQuitModelState}}" class="quit_model" bindtap="_closeQuitModel">
+    <view class="quit_inner">
+        <image class="quit_header" mode="aspectFill" src="{{defaultInfo.anchorPic}}"></image>
+        <view class="quit_continue">{{defaultText.quitLiveRoomAndFllow}}</view>
+        <view class="quit_button1" bindtap="backHome">退出并关注</view>
+        <view class="quit_button2" bindtap="backHome">
+            {{defaultText.quitLiveRoom}}
+        </view>
+    </view>
+</view>

@@ -1,0 +1,45 @@
+page {
+  background: black;
+}
+
+.play-input-background {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.play-input-background .input-background {
+  padding-top: 66rpx;
+}
+
+.play-input-background .input-background .title {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.play-input-background .input-background .red {
+  color: red;
+}
+
+.test-inp {
+  width: 668rpx;
+  padding-left: 20rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  border: 1rpx #cccccc solid;
+  margin-top: 10rpx;
+  margin-bottom: 30rpx;
+  border-radius: 4rpx;
+  color: white;
+}
+
+.play-input-background .toPlayBackground {
+  margin-top: 134rpx;
+}
+
+.play-input-background .btn-normal {
+  color: white;
+  border-radius: 66rpx;
+  width: 75vw;
+  background: rgba(255, 31, 96, 1);
+  margin-bottom: 66rpx;
+}
