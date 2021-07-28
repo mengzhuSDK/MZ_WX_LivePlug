@@ -40,7 +40,7 @@
 
 ```
 
-# 快速接入详细步骤
+# 快速集成模版步骤
 ```
   1. 将mzinterface、live、player文件夹拷贝到工程内，mzinterface跟pages同级，live和player在pages的根目录。
   2. 参照demo里的app.json，app.js文件，设置下这2个文件。
