@@ -42,16 +42,15 @@
 
 # 快速集成模版步骤
 ```
-  1. 将mzinterface、live、player文件夹拷贝到工程内，mzinterface跟pages同级，live和player在pages的根目录。
-  2. 参照demo里的app.json，app.js文件，设置下这2个文件。
-  3. index.js是引入SDK，设置SDK信息，初始化SDK。可将相关代码拷贝到项目入口文件里。
-  4. 语音动画插件
-    - 如果不需要语音直播功能，直接搜索关键词lottie，将相关代码注释即可，至此就可以运行项目了。
-    - 添加语音动画插件的步骤：
-      1. 执行 npm init 命令。
-      2. 执行 npm install lottie-miniprogram --save 命令。
-      3. 右上角 详情 - 本地设置， 选中 使用npm。
-      4. 菜单栏 - 工具 - 构建npm。
+1. 将mzinterface、live、player文件夹拷贝到工程内，mzinterface跟pages同级，live和player在pages的根目录。
+2. 参照demo里的app.json，app.js文件，设置下这2个文件。
+3. index.js是引入SDK，设置SDK信息，初始化SDK。可将相关代码拷贝到项目入口文件里。
+4. 如果不需要语音直播功能，直接搜索关键词lottie，将livepusher.js和liveroom.js内相关代码注释即可，至此就可以运行项目了。
+  添加语音直播的动画插件 - lottie-miniprogram，如已安装请忽略：
+  1. 执行 npm init 命令。
+  2. 执行 npm install lottie-miniprogram --save 命令。
+  3. 右上角 详情 - 本地设置， 选中 使用npm。
+  4. 菜单栏 - 工具 - 构建npm。
 ```
 
 # 接口说明
