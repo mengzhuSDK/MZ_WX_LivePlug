@@ -13,6 +13,9 @@ Page({
 	auani: null,
 
 	data: {
+		//是否有权限使用live-player
+		isCanUseLivePlayer: app.globalData.isCanUseLivePlayer,
+
 		//横屏还是竖屏 0 = 横屏， 1 = 竖屏
 		live_style: 0,
 		//0是视频，1是音频
@@ -890,7 +893,7 @@ Page({
 			_this.data.currentUser.uniqueId = res.unique_id;
 			console.log("活动状态 = " + res.status);
 			var isLive = (res.status == "2" || res.status == "0") ? false : true;
-			var videoURLString = isLive ? res.video.url : res.video.http_url;
+			var videoURLString = (isLive && _this.data.isCanUseLivePlayer == true) ? res.video.url : res.video.http_url;
 			var stateString = "直播";
 			if (isLive == false) {
 				if (res.status == "0") {
@@ -1015,7 +1018,8 @@ Page({
 							isADShow: true
 						})
 					} else {
-						if (isLive) {
+						if (res.status == "0") return;
+						if (isLive && _this.data.isCanUseLivePlayer == true) {
 							_this.playContext.play();
 						} else {
 							_this.videoContext.play();
@@ -1733,7 +1737,6 @@ Page({
 		if (cIsHidden) {
 			this.startDefaultAnimation();
 		}
-
 		this.setData({
 			controlIsHidden: cIsHidden
 		})
@@ -1808,7 +1811,8 @@ Page({
 				isADShow: true
 			})
 		} else {
-			if (isLive) {
+			if (this.data.liveState == "0") return;
+			if (isLive && this.data.isCanUseLivePlayer == true) {
 				this.playContext.play();
 			} else {
 				this.videoContext.play();
@@ -1825,7 +1829,8 @@ Page({
 			isADShow: false
 		}, () => {
 			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
-			if (isLive) {
+			if (this.data.liveState == "0") return;
+			if (isLive && this.data.isCanUseLivePlayer == true) {
 				this.playContext.play();
 			} else {
 				this.videoContext.play();
@@ -1841,7 +1846,8 @@ Page({
 			isADShow: false
 		}, () => {
 			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
-			if (isLive) {
+			if (this.data.liveState == "0") return;
+			if (isLive && this.data.isCanUseLivePlayer == true) {
 				this.playContext.play();
 			} else {
 				this.videoContext.play();
@@ -1857,7 +1863,8 @@ Page({
 			isADShow: false
 		}, () => {
 			var isLive = (this.data.liveState == "2" || this.data.liveState == "0") ? false : true;
-			if (isLive) {
+			if (this.data.liveState == "0") return;
+			if (isLive && this.data.isCanUseLivePlayer == true) {
 				this.playContext.play();
 			} else {
 				this.videoContext.play();

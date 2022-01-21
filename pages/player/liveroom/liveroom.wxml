@@ -1,7 +1,7 @@
 <view class="container-room-background">
 	<!-- 视频播放-回放 -->
 	<video
-	 wx:if="{{liveState == 2 || liveState == 0}}"
+	 wx:if="{{(liveState == 2 || liveState == 0) || (isCanUseLivePlayer == false)}}"
 	 class="{{!liveShow?'live-player live-show':'live-player live-hide'}}"
 	 id="myVideo"
 	 src="{{videoUrl}}"
@@ -38,7 +38,7 @@
 	</video>
 	<!-- orientation="{{live_style==0?'vertical':'horizontal'}}"  -->
 	<live-player
-	 wx:if="{{liveState == 1 || liveState == 3}}"
+	 wx:if="{{(liveState == 1 || liveState == 3) && (isCanUseLivePlayer == true)}}"
 	 id="livePlayer"
 	 class="{{!liveShow?'live-player live-show':'live-player live-hide'}}"
 	 src="{{videoUrl}}"
